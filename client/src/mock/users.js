@@ -6,7 +6,7 @@
 export const MOCK_USERS = [
   {
     id: "u-1",
-    name: "Kanish Sharma",
+    name: "Kanish",
     email: "member@bookd.test",
     role: "member",
     memberId: "MEM-2024-001",
@@ -18,7 +18,7 @@ export const MOCK_USERS = [
   },
   {
     id: "u-2",
-    name: "Naisha Roy",
+    name: "Naisha",
     email: "librarian@bookd.test",
     role: "librarian",
     memberId: "LIB-2023-014",

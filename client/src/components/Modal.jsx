@@ -24,22 +24,22 @@ export const Modal = ({ isOpen, onClose, title, subtitle, children, maxWidth = '
         />
 
         {/* Modal Dialog */}
-        <div className={`relative transform overflow-hidden rounded-md bg-merino-light text-left shadow-elevated transition-all w-full ${maxWidth} border border-sand my-8`}>
+        <div className={`relative transform overflow-hidden rounded-3xl bg-merino-light text-left shadow-elevated transition-all w-full ${maxWidth} border border-sand my-8`}>
           {/* Header */}
-          <div className="p-5 border-b border-sand bg-merino/40 flex items-start justify-between">
+          <div className="p-6 border-b border-sand bg-merino/40 flex items-start justify-between">
             <div>
-              <h3 className="font-serif text-lg font-bold text-ink">
+              <h3 className="text-xl font-extrabold text-ink tracking-tight">
                 {title}
               </h3>
               {subtitle && (
-                <p className="text-xs text-ink-muted mt-0.5">
+                <p className="text-xs text-ink-muted mt-1 font-medium">
                   {subtitle}
                 </p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded text-ink-muted hover:text-ink hover:bg-sand/40 transition"
+              className="p-1.5 rounded-full text-ink-muted hover:text-ink hover:bg-sand/60 transition"
             >
               <X className="w-5 h-5" />
             </button>

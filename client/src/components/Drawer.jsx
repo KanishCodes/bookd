@@ -28,18 +28,18 @@ export const Drawer = ({ isOpen, onClose, title, subtitle, children, width = 'ma
           {/* Header */}
           <div className="p-6 border-b border-sand bg-merino/50 flex items-start justify-between">
             <div>
-              <h2 className="font-serif text-xl font-bold text-ink leading-tight">
+              <h2 className="text-xl font-extrabold text-ink leading-tight tracking-tight">
                 {title}
               </h2>
               {subtitle && (
-                <p className="text-xs text-ink-muted mt-1">
+                <p className="text-xs text-ink-muted mt-1 font-medium">
                   {subtitle}
                 </p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="p-1 rounded text-ink-muted hover:text-ink hover:bg-sand/40 transition"
+              className="p-1.5 rounded-full text-ink-muted hover:text-ink hover:bg-sand/60 transition"
               aria-label="Close drawer"
             >
               <X className="w-5 h-5" />

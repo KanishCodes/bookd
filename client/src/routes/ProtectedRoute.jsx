@@ -12,7 +12,7 @@ export const ProtectedRoute = ({ children, allowedRoles = [] }) => {
       <div className="min-h-screen flex items-center justify-center bg-merino">
         <div className="flex flex-col items-center gap-3">
           <div className="w-8 h-8 border-2 border-venice-blue border-t-transparent rounded-full animate-spin"></div>
-          <span className="font-serif italic text-venice-blue text-sm tracking-wide">
+          <span className="text-venice-blue text-sm font-semibold tracking-wide">
             Consulting the catalogue...
           </span>
         </div>

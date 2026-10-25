@@ -70,22 +70,22 @@ export const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-8">
-            <Link to="/" className="flex items-center gap-2.5 group">
-              <div className="w-9 h-9 rounded bg-venice-blue text-merino flex items-center justify-center font-serif text-lg font-bold shadow-sm group-hover:bg-venice-blue-hover transition">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="w-10 h-10 rounded-2xl bg-venice-blue text-merino flex items-center justify-center font-display text-xl font-bold shadow-sm group-hover:scale-105 transition-all">
                 B
               </div>
               <div className="flex flex-col">
-                <span className="font-serif text-2xl font-bold tracking-tight text-ink leading-none">
+                <span className="font-display text-2xl font-bold tracking-tight text-ink leading-none">
                   Book’d
                 </span>
-                <span className="text-[10px] tracking-widest uppercase small-caps text-ink-muted font-sans font-medium">
-                  Circulation System
+                <span className="text-[10px] tracking-wider uppercase font-semibold text-ink-muted mt-0.5">
+                  Library System
                 </span>
               </div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden md:flex items-center gap-1.5 p-1 rounded-full bg-sand/35 border border-sand/70">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 return (
@@ -93,14 +93,14 @@ export const Navbar = () => {
                     key={link.to}
                     to={link.to}
                     className={({ isActive }) =>
-                      `flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition ${
+                      `flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold transition-all ${
                         isActive
-                          ? 'bg-venice-blue text-merino font-semibold shadow-sm'
-                          : 'text-ink-muted hover:text-ink hover:bg-sand/50'
+                          ? 'bg-venice-blue text-merino shadow-sm'
+                          : 'text-ink-muted hover:text-ink hover:bg-sand/60'
                       }`
                     }
                   >
-                    <Icon className="w-4 h-4" />
+                    <Icon className="w-3.5 h-3.5" />
                     <span>{link.label}</span>
                   </NavLink>
                 );
@@ -109,18 +109,21 @@ export const Navbar = () => {
           </div>
 
           {/* User Profile & Logout */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3">
             {user ? (
-              <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <div className="text-sm font-medium text-ink leading-none">
+              <div className="flex items-center gap-2.5 p-1.5 pr-2.5 rounded-full bg-sand/30 border border-sand">
+                <div className="w-8 h-8 rounded-full bg-venice-blue text-merino flex items-center justify-center font-display text-xs font-bold shadow-sm">
+                  {user.name.charAt(0)}
+                </div>
+                <div className="text-left pr-1">
+                  <div className="text-xs font-bold text-ink leading-tight">
                     {user.name}
                   </div>
-                  <div className="flex items-center justify-end gap-1.5 mt-1">
+                  <div className="flex items-center gap-1.5">
                     <span className="text-[10px] font-mono text-ink-muted">
                       {user.memberId}
                     </span>
-                    <span className="text-[10px] uppercase tracking-wider small-caps px-1.5 py-0.2 rounded bg-rock-blue/20 text-venice-blue font-semibold border border-rock-blue/30">
+                    <span className="text-[9px] uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-rock-blue/25 text-venice-blue font-bold">
                       {user.role}
                     </span>
                   </div>
@@ -129,15 +132,15 @@ export const Navbar = () => {
                 <button
                   onClick={handleLogout}
                   title="Sign out"
-                  className="p-2 rounded text-ink-muted hover:text-warm-red hover:bg-warm-red/10 border border-sand transition"
+                  className="p-1.5 rounded-full text-ink-muted hover:text-warm-red hover:bg-warm-red/15 transition ml-1"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="w-3.5 h-3.5" />
                 </button>
               </div>
             ) : (
               <Link
                 to="/login"
-                className="px-4 py-2 bg-venice-blue text-merino text-sm rounded font-medium hover:bg-venice-blue-hover transition"
+                className="px-5 py-2 bg-venice-blue text-merino text-xs font-semibold rounded-full hover:bg-venice-blue-hover transition shadow-sm"
               >
                 Sign In
               </Link>

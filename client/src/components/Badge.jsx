@@ -5,7 +5,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 
   if (norm === 'OVERDUE') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-warm-red/15 text-warm-red border border-warm-red/30">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-warm-red/15 text-warm-red border border-warm-red/30">
         <span className="w-1.5 h-1.5 rounded-full bg-warm-red animate-pulse" />
         Overdue {fineAmount > 0 ? `(₹${fineAmount})` : ''}
       </span>
@@ -14,7 +14,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 
   if (norm === 'ACTIVE') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-venice-blue/10 text-venice-blue border border-venice-blue/20">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-venice-blue/10 text-venice-blue border border-venice-blue/20">
         <span className="w-1.5 h-1.5 rounded-full bg-venice-blue" />
         Active Loan
       </span>
@@ -23,7 +23,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 
   if (norm === 'RETURNED') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-sand/40 text-ink-muted border border-sand">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sand/50 text-ink-muted border border-sand">
         <span className="w-1.5 h-1.5 rounded-full bg-ink-muted/50" />
         Returned
       </span>
@@ -32,7 +32,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 
   if (norm === 'WAITING') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-amber-500/10 text-amber-800 border border-amber-300">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/15 text-amber-900 border border-amber-300">
         <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
         In Queue
       </span>
@@ -41,7 +41,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 
   if (norm === 'READY_FOR_PICKUP') {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-xs font-medium bg-sage/15 text-sage border border-sage/30">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sage/15 text-sage border border-sage/30">
         <span className="w-1.5 h-1.5 rounded-full bg-sage" />
         Ready for Pickup
       </span>
@@ -49,7 +49,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
   }
 
   return (
-    <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-sand/30 text-ink-muted border border-sand">
+    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-sand/30 text-ink-muted border border-sand">
       {status}
     </span>
   );
@@ -58,7 +58,7 @@ export const StatusBadge = ({ status, fineAmount = 0 }) => {
 export const AvailabilityBadge = ({ availableCopies, totalCopies }) => {
   if (availableCopies > 0) {
     return (
-      <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-sage/15 text-sage border border-sage/30">
+      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-sage/15 text-sage border border-sage/30">
         <span className="w-1.5 h-1.5 rounded-full bg-sage" />
         {availableCopies} of {totalCopies} available
       </span>
@@ -66,9 +66,9 @@ export const AvailabilityBadge = ({ availableCopies, totalCopies }) => {
   }
 
   return (
-    <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-medium bg-ink-muted/10 text-ink-muted border border-ink-muted/20">
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-ink-muted/10 text-ink-muted border border-ink-muted/20">
       <span className="w-1.5 h-1.5 rounded-full bg-ink-muted/60" />
-      All borrowed (0/{totalCopies})
+      0 of {totalCopies} available
     </span>
   );
 };
@@ -78,10 +78,10 @@ export const CategoryTag = ({ category, onClick, active = false }) => {
     <button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center px-2.5 py-1 text-xs tracking-wider uppercase small-caps rounded transition-colors ${
+      className={`inline-flex items-center px-3.5 py-1.5 text-xs font-semibold rounded-full transition-all duration-150 ${
         active
-          ? 'bg-venice-blue text-merino-light font-medium'
-          : 'bg-rock-blue/15 text-venice-blue hover:bg-rock-blue/30 border border-sand'
+          ? 'bg-venice-blue text-merino-light shadow-sm scale-105'
+          : 'bg-merino-light text-ink-muted hover:text-ink hover:bg-sand/60 border border-sand'
       }`}
     >
       {category}

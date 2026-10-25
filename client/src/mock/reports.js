@@ -39,7 +39,7 @@ export const MOCK_REPORTS = {
     { name: "Sneha Mukherjee", memberId: "MEM-2024-190", book: "A Pattern Language", overdueDays: 24, fine: 120 },
     { name: "Aanya Verma", memberId: "MEM-2024-042", book: "One Hundred Years of Solitude", overdueDays: 10, fine: 50 },
     { name: "Karan Johar", memberId: "MEM-2024-288", book: "A Brief History of Time", overdueDays: 9, fine: 45 },
-    { name: "Kanish Sharma", memberId: "MEM-2024-001", book: "Structure and Interpretation of Computer Programs", overdueDays: 7, fine: 35 },
+    { name: "Kanish", memberId: "MEM-2024-001", book: "Structure and Interpretation of Computer Programs", overdueDays: 7, fine: 35 },
     { name: "Divya Nambiar", memberId: "MEM-2024-380", book: "Ways of Seeing", overdueDays: 3, fine: 15 }
   ]
 };

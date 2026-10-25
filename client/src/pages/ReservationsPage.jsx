@@ -68,23 +68,25 @@ export const ReservationsPage = () => {
       {/* Header */}
       <div className="pb-6 border-b border-sand flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest small-caps font-sans font-medium text-ink-muted">
+          <span className="text-xs uppercase tracking-wider font-semibold text-ink-muted">
             Queue Priority & Title Holds
           </span>
-          <h1 className="font-serif text-3xl font-bold text-ink tracking-tight mt-1 flex items-center gap-2">
-            <BookmarkCheck className="w-8 h-8 text-venice-blue stroke-[1.5]" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-1 flex items-center gap-2.5">
+            <BookmarkCheck className="w-8 h-8 text-venice-blue stroke-[2]" />
             <span>Circulation Holds & Reservations</span>
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-ink-muted mt-1 font-medium">
             {role === 'member'
               ? 'Track your place in line for fully borrowed volumes and pick up notices.'
               : 'Institutional queue ledger across all stack volumes with pending patron reservations.'}
           </p>
         </div>
 
-        <div className="text-right">
-          <span className="text-xs text-ink-muted">Active Queue Holds</span>
-          <div className="font-serif text-2xl font-bold text-venice-blue">
+        <div className="bg-[#FEF8E7] border border-amber-200/90 rounded-2xl p-4 text-right shadow-sm">
+          <span className="text-xs text-amber-900 uppercase tracking-wider font-bold block">
+            Active Queue Holds
+          </span>
+          <div className="text-3xl font-extrabold text-amber-950 mt-1">
             {reservations.length}
           </div>
         </div>
@@ -110,22 +112,22 @@ export const ReservationsPage = () => {
               return (
                 <div
                   key={res.id}
-                  className={`paper-card rounded-md p-5 border flex flex-col justify-between transition ${
-                    isReady ? 'border-sage/40 bg-sage/5' : 'border-sand'
+                  className={`bento-card rounded-3xl p-6 border flex flex-col justify-between transition-all shadow-bento hover:shadow-bento-hover ${
+                    isReady ? 'border-sage/40 bg-sage/5' : 'border-sand hover:border-rock-blue/50'
                   }`}
                 >
                   <div>
-                    <div className="flex items-center justify-between pb-3 border-b border-sand/70 mb-3">
+                    <div className="flex items-center justify-between pb-3.5 border-b border-sand/70 mb-3.5">
                       <StatusBadge status={res.status} />
-                      <span className="font-mono text-xs px-2 py-0.5 rounded bg-sand/60 text-venice-blue font-semibold">
+                      <span className="font-mono text-xs px-3 py-1 rounded-full bg-sand/60 text-venice-blue font-bold">
                         Position #{res.queuePosition}
                       </span>
                     </div>
 
-                    <h3 className="font-serif font-bold text-ink text-base leading-snug">
+                    <h3 className="font-bold text-ink text-base leading-snug">
                       {res.bookTitle}
                     </h3>
-                    <p className="text-xs text-ink-muted mt-0.5 truncate">
+                    <p className="text-xs text-ink-muted mt-0.5 truncate font-medium">
                       {res.bookAuthor}
                     </p>
 
@@ -175,7 +177,7 @@ export const ReservationsPage = () => {
 
                     <button
                       onClick={() => handleCancel(res.id, res.bookTitle)}
-                      className="inline-flex items-center gap-1 px-2.5 py-1 text-xs text-warm-red hover:bg-warm-red/10 rounded transition font-medium"
+                      className="inline-flex items-center gap-1.5 px-3.5 py-1 text-xs text-warm-red hover:bg-warm-red/10 rounded-full transition font-bold"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                       <span>Cancel Hold</span>

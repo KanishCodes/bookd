@@ -13,12 +13,12 @@
   body {
     background-color: #F5EEDD;
     color: #0E2B3D;
-    background-image: radial-gradient(rgba(22, 88, 123, 0.03) 1px, transparent 1px);
-    background-size: 24px 24px;
+    background-image: radial-gradient(rgba(22, 88, 123, 0.04) 1.2px, transparent 1.2px);
+    background-size: 28px 28px;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
 
-  /* Tabular numbers for clean tabular data and dates */
+  /* Tabular numbers for clean data, prices, dates */
   .tabular-nums, table, [data-tabular] {
     font-variant-numeric: tabular-nums;
   }
@@ -27,20 +27,79 @@
 @layer utilities {
   .small-caps {
     font-variant-caps: all-small-caps;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.05em;
   }
   
   .paper-border {
-    border: 1px solid #E4DAC5;
+    border: 1px solid #E8DFCD;
   }
 
   .paper-card {
     background-color: #FAF6ED;
     border: 1px solid #E4DAC5;
+    border-radius: 1.5rem; /* Curvy 24px */
+    box-shadow: 0 4px 20px -2px rgba(14, 43, 61, 0.04);
+  }
+
+  /* Pinterest / Bento grid card styling */
+  .bento-card {
+    background-color: #FAF6ED;
+    border: 1px solid #E5DCC8;
+    border-radius: 1.5rem; /* Curvy 24px */
+    box-shadow: 0 4px 20px -2px rgba(14, 43, 61, 0.04), 0 2px 6px -1px rgba(14, 43, 61, 0.02);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .bento-card:hover {
+    box-shadow: 0 12px 28px -4px rgba(14, 43, 61, 0.08), 0 4px 10px -2px rgba(14, 43, 61, 0.03);
+  }
+
+  .bento-card-tinted {
+    background-color: #F1ECE0;
+    border: 1px solid #E2D7C2;
+    border-radius: 1.5rem;
+  }
+
+  /* Bento color accents */
+  .bento-card-yellow {
+    background-color: #FEF8E7;
+    border: 1px solid #FDE68A;
+    border-radius: 1.5rem;
+  }
+
+  .bento-card-purple {
+    background-color: #F5F2FE;
+    border: 1px solid #DDD6FE;
+    border-radius: 1.5rem;
+  }
+
+  .bento-card-pink {
+    background-color: #FDF2F8;
+    border: 1px solid #FBCFE8;
+    border-radius: 1.5rem;
+  }
+
+  .bento-card-mint {
+    background-color: #F0FDF4;
+    border: 1px solid #BBF7D0;
+    border-radius: 1.5rem;
+  }
+
+  .bento-card-sky {
+    background-color: #F0F9FF;
+    border: 1px solid #BAE6FD;
+    border-radius: 1.5rem;
+  }
+
+  .bento-card-dark {
+    background-color: #161F28;
+    border: 1px solid #243242;
+    color: #F5EEDD;
+    border-radius: 1.5rem;
   }
 }
 
-/* Custom subtle scrollbar */
+/* Custom subtle curvy scrollbars */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -48,11 +107,12 @@
 
 ::-webkit-scrollbar-track {
   background: #F0E9DA;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb {
   background: #C2DCEB;
-  border-radius: 3px;
+  border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {

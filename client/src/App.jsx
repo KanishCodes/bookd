@@ -99,10 +99,10 @@ export function App() {
       {!isLoginPage && (
         <footer className="border-t border-sand bg-merino py-6 mt-12 text-center text-xs text-ink-muted">
           <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-            <div className="font-serif italic text-ink font-medium">
+            <div className="font-bold text-ink tracking-tight">
               Book’d — Library & Archival Management System
             </div>
-            <div className="font-mono text-[11px] text-ink-muted/80">
+            <div className="font-mono text-[11px] text-ink-muted/80 font-medium">
               Evaluation Build • Live Catalogue & Circulation Desk • Mock Mode Active
             </div>
           </div>

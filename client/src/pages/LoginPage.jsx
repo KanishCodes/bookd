@@ -97,40 +97,40 @@ export const LoginPage = () => {
     <div className="min-h-screen bg-merino flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <Link to="/" className="inline-flex items-center gap-2 mb-2 group">
+        <Link to="/" className="inline-flex items-center gap-2 mb-3 group">
           <ArrowLeft className="w-4 h-4 text-ink-muted group-hover:text-ink transition" />
-          <span className="text-xs font-sans uppercase tracking-wider small-caps text-ink-muted group-hover:text-ink transition">
+          <span className="text-xs uppercase tracking-wider font-semibold text-ink-muted group-hover:text-ink transition">
             Back to Public Entrance
           </span>
         </Link>
-        <div className="w-12 h-12 rounded bg-venice-blue text-merino flex items-center justify-center font-serif text-2xl font-bold mx-auto shadow-sm mt-1 mb-2">
+        <div className="w-12 h-12 rounded-2xl bg-venice-blue text-merino flex items-center justify-center text-2xl font-extrabold mx-auto shadow-bento mt-1 mb-2">
           B
         </div>
-        <h1 className="font-serif text-3xl font-bold text-ink tracking-tight">
+        <h1 className="text-3xl font-extrabold text-ink tracking-tight">
           Book’d
         </h1>
-        <p className="mt-0.5 text-xs text-ink-muted font-sans">
+        <p className="mt-0.5 text-xs text-ink-muted font-medium">
           University Circulation & Archival Ledger
         </p>
       </div>
 
       <div className="mt-6 sm:mx-auto sm:w-full sm:max-w-md px-4">
-        <div className="paper-card rounded-lg p-7 shadow-card-subtle">
-          {/* Mode Switch Tabs: Sign In vs Sign Up */}
-          <div className="flex border-b border-sand mb-5">
+        <div className="bento-card rounded-3xl p-8 border border-sand shadow-bento">
+          {/* Mode Switch Tabs: Sign In vs Sign Up - Pill Tabs */}
+          <div className="flex rounded-full bg-sand/40 border border-sand p-1 mb-6 text-xs font-bold">
             <button
               type="button"
               onClick={() => {
                 setMode('login');
                 setError('');
               }}
-              className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider small-caps transition border-b-2 -mb-[1px] ${
+              className={`flex-1 py-2 rounded-full text-xs uppercase tracking-wider transition ${
                 mode === 'login'
-                  ? 'border-venice-blue text-venice-blue'
-                  : 'border-transparent text-ink-muted hover:text-ink'
+                  ? 'bg-venice-blue text-merino shadow-sm'
+                  : 'text-ink-muted hover:text-ink'
               }`}
             >
-              Sign In (Existing Patron)
+              Sign In
             </button>
             <button
               type="button"
@@ -138,18 +138,18 @@ export const LoginPage = () => {
                 setMode('signup');
                 setError('');
               }}
-              className={`flex-1 py-2 text-xs font-semibold uppercase tracking-wider small-caps transition border-b-2 -mb-[1px] ${
+              className={`flex-1 py-2 rounded-full text-xs uppercase tracking-wider transition ${
                 mode === 'signup'
-                  ? 'border-venice-blue text-venice-blue'
-                  : 'border-transparent text-ink-muted hover:text-ink'
+                  ? 'bg-venice-blue text-merino shadow-sm'
+                  : 'text-ink-muted hover:text-ink'
               }`}
             >
-              Sign Up (New Patron / Staff)
+              Sign Up
             </button>
           </div>
 
           {error && (
-            <div className="mb-4 p-3 bg-warm-red/10 border border-warm-red/25 rounded text-warm-red text-xs">
+            <div className="mb-4 p-3 bg-warm-red/10 border border-warm-red/25 rounded-2xl text-warm-red text-xs font-semibold">
               {error}
             </div>
           )}
@@ -158,88 +158,88 @@ export const LoginPage = () => {
             /* Sign In Form */
             <div>
               {/* Quick Preset Hints: Fill only, does not auto-submit */}
-              <div className="mb-4 p-3 bg-sand/35 rounded border border-sand">
-                <div className="flex items-center justify-between text-[11px] font-semibold text-venice-blue uppercase small-caps tracking-wider mb-1.5">
+              <div className="mb-5 p-3.5 bg-sand/40 rounded-2xl border border-sand">
+                <div className="flex items-center justify-between text-[11px] font-bold text-venice-blue uppercase tracking-wider mb-2">
                   <span className="flex items-center gap-1">
-                    <ShieldCheck className="w-3.5 h-3.5" /> Quick Fill Account ID:
+                    <ShieldCheck className="w-3.5 h-3.5" /> Quick Fill ID:
                   </span>
-                  <span className="font-mono text-[10px] text-ink-muted font-normal">
-                    Password: demo1234
+                  <span className="font-mono text-[10px] text-ink-muted font-medium">
+                    demo1234
                   </span>
                 </div>
-                <div className="grid grid-cols-3 gap-1.5">
+                <div className="grid grid-cols-3 gap-2">
                   <button
                     type="button"
                     onClick={() => fillCredentials('kanish@bookd.test')}
-                    className={`py-1 px-1.5 rounded text-left text-[11px] transition border ${
+                    className={`py-1.5 px-2 rounded-xl text-left text-[11px] transition border ${
                       email.includes('member') || email.includes('kanish')
-                        ? 'bg-venice-blue text-merino border-venice-blue font-medium'
+                        ? 'bg-venice-blue text-merino border-venice-blue font-bold shadow-sm'
                         : 'bg-merino-light text-ink hover:bg-sand border-sand'
                     }`}
                   >
-                    <div className="font-semibold truncate">Member</div>
-                    <div className="text-[9px] opacity-75 font-mono">kanish@bookd</div>
+                    <div className="font-bold truncate">Member</div>
+                    <div className="text-[9px] opacity-80 font-mono">kanish@bookd</div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => fillCredentials('naisha@bookd.test')}
-                    className={`py-1 px-1.5 rounded text-left text-[11px] transition border ${
+                    className={`py-1.5 px-2 rounded-xl text-left text-[11px] transition border ${
                       email.includes('librarian') || email.includes('naisha')
-                        ? 'bg-venice-blue text-merino border-venice-blue font-medium'
+                        ? 'bg-venice-blue text-merino border-venice-blue font-bold shadow-sm'
                         : 'bg-merino-light text-ink hover:bg-sand border-sand'
                     }`}
                   >
-                    <div className="font-semibold truncate">Librarian</div>
-                    <div className="text-[9px] opacity-75 font-mono">naisha@bookd</div>
+                    <div className="font-bold truncate">Librarian</div>
+                    <div className="text-[9px] opacity-80 font-mono">naisha@bookd</div>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => fillCredentials('patel@bookd.test')}
-                    className={`py-1 px-1.5 rounded text-left text-[11px] transition border ${
+                    className={`py-1.5 px-2 rounded-xl text-left text-[11px] transition border ${
                       email.includes('admin') || email.includes('patel')
-                        ? 'bg-venice-blue text-merino border-venice-blue font-medium'
+                        ? 'bg-venice-blue text-merino border-venice-blue font-bold shadow-sm'
                         : 'bg-merino-light text-ink hover:bg-sand border-sand'
                     }`}
                   >
-                    <div className="font-semibold truncate">Admin</div>
-                    <div className="text-[9px] opacity-75 font-mono">patel@bookd</div>
+                    <div className="font-bold truncate">Admin</div>
+                    <div className="text-[9px] opacity-80 font-mono">patel@bookd</div>
                   </button>
                 </div>
               </div>
 
               <form onSubmit={handleLoginSubmit} className="space-y-4">
                 <div>
-                  <label className="block text-xs font-medium text-ink small-caps uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-ink uppercase tracking-wider mb-1.5">
                     Institutional Email / Card ID
                   </label>
                   <div className="relative">
-                    <Mail className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                    <Mail className="w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="text"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="e.g. kanish@bookd.test"
-                      className="w-full pl-9 pr-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition"
+                      className="w-full pl-10 pr-3 py-2.5 bg-merino-light border border-sand rounded-xl text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition font-medium"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-medium text-ink small-caps uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-bold text-ink uppercase tracking-wider mb-1.5">
                     Password
                   </label>
                   <div className="relative">
-                    <KeyRound className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                    <KeyRound className="w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
                     <input
                       type="password"
                       required
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="••••••••"
-                      className="w-full pl-9 pr-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition"
+                      className="w-full pl-10 pr-3 py-2.5 bg-merino-light border border-sand rounded-xl text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition font-medium"
                     />
                   </div>
                 </div>
@@ -247,7 +247,7 @@ export const LoginPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 py-2.5 px-4 bg-venice-blue hover:bg-venice-blue-hover text-merino font-medium text-xs uppercase small-caps tracking-wider rounded transition shadow-sm flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full mt-3 py-3 px-5 bg-venice-blue hover:bg-venice-blue-hover text-merino font-bold text-xs uppercase tracking-wider rounded-full transition shadow-bento flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {loading ? (
                     <>
@@ -277,8 +277,8 @@ export const LoginPage = () => {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Kanish Mahajan"
-                    className="w-full pl-9 pr-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition"
+                    placeholder="e.g. Kanish"
+                    className="w-full pl-10 pr-3 py-2.5 bg-merino-light border border-sand rounded-xl text-xs text-ink placeholder-ink-muted/50 focus:outline-none focus:border-venice-blue transition font-medium"
                   />
                 </div>
               </div>

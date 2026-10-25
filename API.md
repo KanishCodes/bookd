@@ -46,7 +46,7 @@ This document details the exact contract between the **Book’d** frontend (`cli
   "bookTitle": "Structure and Interpretation of Computer Programs",
   "bookAuthor": "Harold Abelson, Gerald Jay Sussman",
   "userId": "u-1",
-  "userName": "Kanish Sharma",
+  "userName": "Kanish",
   "userEmail": "member@bookd.test",
   "memberId": "MEM-2024-001",
   "issuedAt": "2026-10-10T10:30:00.000Z",
@@ -64,7 +64,7 @@ This document details the exact contract between the **Book’d** frontend (`cli
 ```json
 {
   "id": "u-1",
-  "name": "Kanish Sharma",
+  "name": "Kanish",
   "email": "member@bookd.test",
   "role": "member",
   "memberId": "MEM-2024-001",
@@ -94,7 +94,7 @@ This document details the exact contract between the **Book’d** frontend (`cli
     "token": "jwt_token_string",
     "user": {
       "id": "u-1",
-      "name": "Kanish Sharma",
+      "name": "Kanish",
       "email": "member@bookd.test",
       "role": "member",
       "memberId": "MEM-2024-001",
@@ -114,7 +114,7 @@ This document details the exact contract between the **Book’d** frontend (`cli
   {
     "user": {
       "id": "u-1",
-      "name": "Kanish Sharma",
+      "name": "Kanish",
       "email": "member@bookd.test",
       "role": "member",
       "memberId": "MEM-2024-001",

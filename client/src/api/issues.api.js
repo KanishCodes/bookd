@@ -146,7 +146,7 @@ export const getMyIssues = async () => {
   if (isMockMode()) {
     await mockDelay(null, 200);
 
-    // Filter by logged-in user or default member Kanish Sharma (u-1)
+    // Filter by logged-in user or default member Kanish (u-1)
     let currentUserId = 'u-1';
     const storedUser = localStorage.getItem('bookd_user');
     if (storedUser) {

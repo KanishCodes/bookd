@@ -79,27 +79,27 @@ export const FinePaymentPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="pb-6 border-b border-sand flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="pb-6 border-b border-sand/70 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest small-caps font-sans font-medium text-ink-muted">
+          <span className="text-xs uppercase tracking-wider font-semibold text-ink-muted">
             Financial Settlement & Stack Overdue Clearance
           </span>
-          <h1 className="font-serif text-3xl font-bold text-ink tracking-tight mt-1 flex items-center gap-2">
-            <CreditCard className="w-8 h-8 text-venice-blue stroke-[1.5]" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-1 flex items-center gap-2.5">
+            <CreditCard className="w-8 h-8 text-venice-blue stroke-[2]" />
             <span>Circulation Dues & Fine Payment</span>
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-ink-muted mt-1 font-medium">
             {isMember
               ? 'Clear accumulated overdue liabilities to preserve your library standing.'
               : 'Institutional fine register across all enrolled patrons and departments.'}
           </p>
         </div>
 
-        <div className="paper-card rounded p-3 border border-sand text-right">
-          <span className="text-xs text-ink-muted small-caps uppercase block">
+        <div className="bg-[#FDF2F8] border border-pink-200/90 rounded-2xl p-4 text-right shadow-sm">
+          <span className="text-xs text-pink-900 uppercase tracking-wider font-bold block">
             {isMember ? 'My Outstanding Dues' : 'Total Pending Collection'}
           </span>
-          <div className={`font-serif text-2xl font-bold ${totalOutstanding > 0 ? 'text-warm-red' : 'text-sage'}`}>
+          <div className={`text-3xl font-extrabold mt-1 ${totalOutstanding > 0 ? 'text-warm-red' : 'text-sage'}`}>
             ₹{totalOutstanding}
           </div>
         </div>
@@ -120,28 +120,28 @@ export const FinePaymentPage = () => {
           />
         ) : (
           <div className="space-y-4">
-            <div className="paper-card rounded-md overflow-hidden border border-sand">
+            <div className="bg-merino-light rounded-3xl overflow-hidden border border-sand shadow-bento">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
                   <thead>
-                    <tr className="bg-sand/30 border-b border-sand font-sans small-caps uppercase tracking-wider text-ink-muted">
-                      <th className="py-3 px-4">Fine Reference</th>
-                      <th className="py-3 px-4">Overdue Volume</th>
-                      <th className="py-3 px-4">Due Date</th>
-                      <th className="py-3 px-4">Days Overdue</th>
-                      <th className="py-3 px-4">Rate Breakdown</th>
-                      <th className="py-3 px-4">Amount</th>
-                      <th className="py-3 px-4 text-right">Settlement</th>
+                    <tr className="bg-sand/40 border-b border-sand font-bold uppercase tracking-wider text-ink-muted">
+                      <th className="py-3.5 px-4">Fine Reference</th>
+                      <th className="py-3.5 px-4">Overdue Volume</th>
+                      <th className="py-3.5 px-4">Due Date</th>
+                      <th className="py-3.5 px-4">Days Overdue</th>
+                      <th className="py-3.5 px-4">Rate Breakdown</th>
+                      <th className="py-3.5 px-4">Amount</th>
+                      <th className="py-3.5 px-4 text-right">Settlement</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-sand/50">
                     {fines.map((fine) => (
-                      <tr key={fine.id} className="hover:bg-sand/15 transition">
-                        <td className="py-3 px-4 font-mono text-[11px] text-ink-muted">
+                      <tr key={fine.id} className="hover:bg-sand/20 transition">
+                        <td className="py-3 px-4 font-mono text-[11px] text-ink-muted font-bold">
                           {fine.id}
                         </td>
                         <td className="py-3 px-4">
-                          <div className="font-serif font-bold text-ink text-sm">
+                          <div className="font-bold text-ink text-sm">
                             {fine.bookTitle}
                           </div>
                           <div className="text-[10px] font-mono text-ink-muted">
@@ -151,19 +151,19 @@ export const FinePaymentPage = () => {
                         <td className="py-3 px-4 font-mono text-xs text-ink-muted">
                           {fine.dueDate}
                         </td>
-                        <td className="py-3 px-4 font-mono text-xs font-semibold text-warm-red">
+                        <td className="py-3 px-4 font-mono text-xs font-bold text-warm-red">
                           +{fine.overdueDays} days
                         </td>
-                        <td className="py-3 px-4 text-[11px] text-ink-muted">
+                        <td className="py-3 px-4 text-[11px] text-ink-muted font-medium">
                           {fine.overdueDays} days × ₹{fine.dailyRate}/day
                         </td>
-                        <td className="py-3 px-4 font-mono text-sm font-bold text-warm-red">
+                        <td className="py-3 px-4 font-mono text-sm font-extrabold text-warm-red">
                           ₹{fine.amount}
                         </td>
                         <td className="py-3 px-4 text-right">
                           <button
                             onClick={() => handleOpenPay(fine)}
-                            className="px-3 py-1.5 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded text-xs uppercase small-caps font-semibold tracking-wider transition shadow-sm"
+                            className="px-4 py-1.5 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded-full text-xs uppercase tracking-wider font-bold transition shadow-sm"
                           >
                             Pay Dues
                           </button>
@@ -193,10 +193,10 @@ export const FinePaymentPage = () => {
             </div>
 
             <div>
-              <h4 className="font-serif text-lg font-bold text-ink">
+              <h4 className="text-xl font-extrabold text-ink tracking-tight">
                 Fine Paid in Full
               </h4>
-              <p className="text-xs text-ink-muted mt-1">
+              <p className="text-xs text-ink-muted mt-1 font-medium">
                 Your borrowing record has been credited and updated.
               </p>
             </div>
@@ -235,7 +235,7 @@ export const FinePaymentPage = () => {
                 <span className="text-[10px] small-caps uppercase tracking-wider text-ink-muted block font-semibold">
                   Amount Due
                 </span>
-                <span className="font-serif text-2xl font-bold text-warm-red">
+                <span className="text-3xl font-extrabold text-warm-red tracking-tight">
                   ₹{payingFine?.amount}
                 </span>
               </div>

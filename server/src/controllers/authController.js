@@ -103,7 +103,7 @@ export const register = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     // TODO: Naisha - retrieve user from req.user (populated by authenticate middleware)
-    const user = INITIAL_USERS[0]; // Kanish Sharma
+    const user = INITIAL_USERS[0]; // Kanish
     res.json({ user });
   } catch (error) {
     res.status(500).json({ message: error.message || 'Failed to fetch user profile' });

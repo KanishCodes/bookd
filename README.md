@@ -45,8 +45,8 @@ All accounts use the password: **`demo1234`**
 
 | Role | Email | Password | Patron Name | Access Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **Member** | `member@bookd.test` | `demo1234` | Kanish Sharma | Catalogue, Personal Loans, Holds, Pay Fines |
-| **Librarian** | `librarian@bookd.test` | `demo1234` | Naisha Roy | Catalogue, Book Management, Circulation Desk |
+| **Member** | `member@bookd.test` | `demo1234` | Kanish | Catalogue, Personal Loans, Holds, Pay Fines |
+| **Librarian** | `librarian@bookd.test` | `demo1234` | Naisha | Catalogue, Book Management, Circulation Desk |
 | **Admin** | `admin@bookd.test` | `demo1234` | Dr. Arvind Patel | Full Clearance + Analytics & Reports |
 
 > 💡 **Demo Shortcut**: You can also use the **Demo Role Switcher** bar at the very top of the navigation bar to switch identities in 1-click without re-logging in!

@@ -172,45 +172,45 @@ export const LibrarianDeskPage = () => {
       )}
 
       {/* Desk Header */}
-      <div className="pb-6 border-b border-sand flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="pb-6 border-b border-sand/70 flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest small-caps font-sans font-medium text-ink-muted">
+          <span className="text-xs uppercase tracking-wider font-semibold text-ink-muted">
             Circulation Services & Stack Control
           </span>
-          <h1 className="font-serif text-3xl font-bold text-ink tracking-tight mt-1 flex items-center gap-2">
-            <Library className="w-8 h-8 text-venice-blue stroke-[1.5]" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-1 flex items-center gap-2.5">
+            <Library className="w-8 h-8 text-venice-blue stroke-[2]" />
             <span>Circulation Desk</span>
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-ink-muted mt-1 font-medium">
             Fast counter tool for book checkouts, returns, renewal extensions, and patron loan tracking.
           </p>
         </div>
 
-        {/* Counter Stats */}
-        <div className="flex items-center gap-2">
-          <div className="px-3 py-1.5 rounded bg-sand/40 border border-sand text-right">
-            <span className="text-[10px] small-caps uppercase tracking-wider text-ink-muted block font-sans">
+        {/* Counter Stats - Bento Chips */}
+        <div className="flex items-center gap-3">
+          <div className="px-4 py-2 rounded-2xl bg-[#FEF8E7] border border-amber-200/90 text-right shadow-sm">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-amber-900 block">
               On Loan
             </span>
-            <span className="font-serif text-lg font-bold text-ink leading-tight">
+            <span className="text-2xl font-extrabold text-amber-950 leading-tight">
               {activeLoanCount}
             </span>
           </div>
 
-          <div className="px-3 py-1.5 rounded bg-warm-red/10 border border-warm-red/25 text-right">
-            <span className="text-[10px] small-caps uppercase tracking-wider text-warm-red block font-sans">
+          <div className="px-4 py-2 rounded-2xl bg-[#FDF2F8] border border-pink-200/90 text-right shadow-sm">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-warm-red block">
               Overdue
             </span>
-            <span className="font-serif text-lg font-bold text-warm-red leading-tight">
+            <span className="text-2xl font-extrabold text-warm-red leading-tight">
               {overdueLoanCount}
             </span>
           </div>
 
-          <div className="px-3 py-1.5 rounded bg-sage/10 border border-sage/25 text-right">
-            <span className="text-[10px] small-caps uppercase tracking-wider text-sage block font-sans">
+          <div className="px-4 py-2 rounded-2xl bg-[#F0FDF4] border border-emerald-200/90 text-right shadow-sm">
+            <span className="text-[10px] uppercase font-bold tracking-wider text-emerald-900 block">
               Returned
             </span>
-            <span className="font-serif text-lg font-bold text-sage leading-tight">
+            <span className="text-2xl font-extrabold text-emerald-950 leading-tight">
               {returnedLoanCount}
             </span>
           </div>
@@ -220,21 +220,21 @@ export const LibrarianDeskPage = () => {
       {/* Fast Action Panels: Issue & Return Desk */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
         {/* Fast Issue Panel (8 Cols) */}
-        <div className="lg:col-span-7 paper-card rounded-md p-5 border border-sand">
-          <div className="flex items-center justify-between pb-3 border-b border-sand mb-4">
+        <div className="lg:col-span-7 bento-card rounded-3xl p-6 border border-sand shadow-bento">
+          <div className="flex items-center justify-between pb-3.5 border-b border-sand/70 mb-4">
             <div className="flex items-center gap-2">
-              <BookDown className="w-4 h-4 text-venice-blue" />
-              <h2 className="font-serif text-base font-bold text-ink">
+              <BookDown className="w-5 h-5 text-venice-blue" />
+              <h2 className="text-lg font-bold text-ink">
                 Quick Issue Volume
               </h2>
             </div>
-            <span className="text-[11px] text-ink-muted font-mono">
+            <span className="text-xs text-ink-muted font-mono font-medium">
               Standard 14-day duration
             </span>
           </div>
 
           {issueError && (
-            <div className="mb-3 p-2.5 bg-warm-red/10 border border-warm-red/25 rounded text-warm-red text-xs">
+            <div className="mb-3 p-3 bg-warm-red/10 border border-warm-red/25 rounded-2xl text-warm-red text-xs font-semibold">
               {issueError}
             </div>
           )}
@@ -288,16 +288,16 @@ export const LibrarianDeskPage = () => {
               <button
                 type="submit"
                 disabled={issuing}
-                className="px-4 py-2 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded text-xs uppercase small-caps tracking-wider font-semibold transition shadow-sm flex items-center gap-1.5 disabled:opacity-50"
+                className="px-5 py-2.5 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded-full text-xs uppercase tracking-wider font-bold transition shadow-bento flex items-center gap-2 disabled:opacity-50"
               >
                 {issuing ? (
                   <>
-                    <div className="w-3 h-3 border-2 border-merino border-t-transparent rounded-full animate-spin" />
+                    <div className="w-3.5 h-3.5 border-2 border-merino border-t-transparent rounded-full animate-spin" />
                     <span>Processing Loan...</span>
                   </>
                 ) : (
                   <>
-                    <BookDown className="w-3.5 h-3.5" />
+                    <BookDown className="w-4 h-4" />
                     <span>Issue Book</span>
                   </>
                 )}
@@ -307,37 +307,37 @@ export const LibrarianDeskPage = () => {
         </div>
 
         {/* Quick Return by Scan / ID (5 Cols) */}
-        <div className="lg:col-span-5 paper-card rounded-md p-5 border border-sand flex flex-col justify-between">
+        <div className="lg:col-span-5 bento-card rounded-3xl p-6 border border-sand shadow-bento flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-sand mb-4">
+            <div className="flex items-center justify-between pb-3.5 border-b border-sand/70 mb-4">
               <div className="flex items-center gap-2">
-                <BookUp className="w-4 h-4 text-venice-blue" />
-                <h2 className="font-serif text-base font-bold text-ink">
+                <BookUp className="w-5 h-5 text-venice-blue" />
+                <h2 className="text-lg font-bold text-ink">
                   Quick Return Intake
                 </h2>
               </div>
-              <span className="text-[11px] text-ink-muted font-mono">
+              <span className="text-xs text-ink-muted font-mono font-medium">
                 Scan or Select
               </span>
             </div>
 
             {returnError && (
-              <div className="mb-3 p-2.5 bg-warm-red/10 border border-warm-red/25 rounded text-warm-red text-xs">
+              <div className="mb-3 p-3 bg-warm-red/10 border border-warm-red/25 rounded-2xl text-warm-red text-xs font-semibold">
                 {returnError}
               </div>
             )}
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs small-caps uppercase tracking-wider font-semibold text-ink-muted mb-1">
+                <label className="block text-xs uppercase tracking-wider font-bold text-ink-muted mb-1.5">
                   Active Loan Issue Reference
                 </label>
                 <div className="relative">
-                  <Barcode className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Barcode className="w-4 h-4 text-ink-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
                   <select
                     value={returnIssueId}
                     onChange={(e) => setReturnIssueId(e.target.value)}
-                    className="w-full pl-9 pr-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink focus:outline-none focus:border-venice-blue"
+                    className="w-full pl-10 pr-3 py-2.5 bg-merino-light border border-sand rounded-xl text-xs text-ink focus:outline-none focus:border-venice-blue font-medium"
                   >
                     <option value="">— Select active loan to return —</option>
                     {issues
@@ -353,23 +353,23 @@ export const LibrarianDeskPage = () => {
             </div>
           </div>
 
-          <div className="pt-3 border-t border-sand/70 mt-3 flex items-center justify-between">
-            <span className="text-[11px] text-ink-muted">
-              Auto-calculates any overdue fine.
+          <div className="pt-4 border-t border-sand/70 mt-4 flex items-center justify-between">
+            <span className="text-xs text-ink-muted font-medium">
+              Auto-calculates fine if overdue.
             </span>
             <button
               onClick={() => handleProcessReturn(returnIssueId)}
               disabled={returning || !returnIssueId}
-              className="px-4 py-2 bg-sand hover:bg-sand-dark text-ink border border-sand-dark rounded text-xs uppercase small-caps tracking-wider font-semibold transition disabled:opacity-50 flex items-center gap-1.5"
+              className="px-5 py-2.5 bg-sand hover:bg-sand-dark text-ink border border-sand-dark rounded-full text-xs uppercase tracking-wider font-bold transition disabled:opacity-50 flex items-center gap-2 shadow-sm"
             >
               {returning ? (
                 <>
-                  <div className="w-3 h-3 border-2 border-ink border-t-transparent rounded-full animate-spin" />
+                  <div className="w-3.5 h-3.5 border-2 border-ink border-t-transparent rounded-full animate-spin" />
                   <span>Processing...</span>
                 </>
               ) : (
                 <>
-                  <BookUp className="w-3.5 h-3.5" />
+                  <BookUp className="w-4 h-4" />
                   <span>Process Return</span>
                 </>
               )}
@@ -382,10 +382,10 @@ export const LibrarianDeskPage = () => {
       <div className="mt-10">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-sand">
           <div>
-            <h2 className="font-serif text-xl font-bold text-ink">
+            <h2 className="text-2xl font-extrabold text-ink tracking-tight">
               Master Circulation Register
             </h2>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-ink-muted font-medium mt-0.5">
               Dense view of all physical volumes, borrowers, due dates, and fine liabilities.
             </p>
           </div>
@@ -450,7 +450,7 @@ export const LibrarianDeskPage = () => {
         </div>
 
         {/* Dense Table */}
-        <div className="mt-4 paper-card rounded-md overflow-hidden border border-sand">
+        <div className="mt-4 bg-merino-light rounded-3xl overflow-hidden border border-sand shadow-bento">
           {loading ? (
             <LoadingState message="Synchronizing circulation stack..." />
           ) : error ? (
@@ -469,14 +469,14 @@ export const LibrarianDeskPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-sand/40 border-b border-sand font-sans small-caps uppercase tracking-wider text-ink-muted">
-                    <th className="py-2.5 px-3">Issue Ref</th>
-                    <th className="py-2.5 px-3">Title & Volume</th>
-                    <th className="py-2.5 px-3">Borrower (Card)</th>
-                    <th className="py-2.5 px-3">Issued</th>
-                    <th className="py-2.5 px-3">Due Date</th>
-                    <th className="py-2.5 px-3">Status / Fine</th>
-                    <th className="py-2.5 px-3 text-right">Desk Actions</th>
+                  <tr className="bg-sand/40 border-b border-sand font-bold uppercase tracking-wider text-ink-muted">
+                    <th className="py-3 px-4">Issue Ref</th>
+                    <th className="py-3 px-4">Title & Volume</th>
+                    <th className="py-3 px-4">Borrower (Card)</th>
+                    <th className="py-3 px-4">Issued</th>
+                    <th className="py-3 px-4">Due Date</th>
+                    <th className="py-3 px-4">Status / Fine</th>
+                    <th className="py-3 px-4 text-right">Desk Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sand/50">
@@ -491,52 +491,52 @@ export const LibrarianDeskPage = () => {
                           isOverdue ? 'bg-warm-red/5' : ''
                         }`}
                       >
-                        <td className="py-2.5 px-3 font-mono text-[11px] text-ink-muted font-medium">
+                        <td className="py-3 px-4 font-mono text-[11px] text-ink-muted font-bold">
                           {iss.id}
                         </td>
-                        <td className="py-2.5 px-3">
-                          <div className="font-serif font-bold text-ink text-xs">
+                        <td className="py-3 px-4">
+                          <div className="font-bold text-ink text-xs">
                             {iss.bookTitle}
                           </div>
-                          <div className="text-[10px] text-ink-muted truncate">
+                          <div className="text-[10px] text-ink-muted truncate font-medium">
                             {iss.bookAuthor}
                           </div>
                         </td>
-                        <td className="py-2.5 px-3">
-                          <div className="font-medium text-ink">
+                        <td className="py-3 px-4">
+                          <div className="font-semibold text-ink">
                             {iss.userName}
                           </div>
                           <div className="font-mono text-[10px] text-ink-muted">
                             {iss.memberId}
                           </div>
                         </td>
-                        <td className="py-2.5 px-3 font-mono text-[11px] text-ink-muted">
+                        <td className="py-3 px-4 font-mono text-[11px] text-ink-muted font-medium">
                           {new Date(iss.issuedAt).toLocaleDateString()}
                         </td>
-                        <td className="py-2.5 px-3 font-mono text-[11px]">
-                          <span className={isOverdue ? 'font-bold text-warm-red' : 'text-ink'}>
+                        <td className="py-3 px-4 font-mono text-[11px]">
+                          <span className={isOverdue ? 'font-bold text-warm-red' : 'text-ink font-medium'}>
                             {new Date(iss.dueAt).toLocaleDateString()}
                           </span>
                         </td>
-                        <td className="py-2.5 px-3">
+                        <td className="py-3 px-4">
                           <div className="flex items-center gap-1.5">
                             <StatusBadge status={iss.status} fineAmount={iss.fineAmount} />
                           </div>
                         </td>
-                        <td className="py-2.5 px-3 text-right space-x-1.5 whitespace-nowrap">
+                        <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
                           {!isReturned && (
                             <>
                               <button
                                 onClick={() => handleQuickRenew(iss.id)}
                                 disabled={(iss.renewCount || 0) >= 2}
-                                className="px-2 py-1 bg-merino-light border border-sand hover:bg-sand text-ink rounded text-[11px] font-medium transition disabled:opacity-40"
+                                className="px-3 py-1 bg-merino-light border border-sand hover:bg-sand text-ink rounded-full text-[11px] font-semibold transition disabled:opacity-40"
                                 title="Extend due date +14 days"
                               >
                                 Renew ({(iss.renewCount || 0)}/2)
                               </button>
                               <button
                                 onClick={() => handleProcessReturn(iss.id)}
-                                className="px-2.5 py-1 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded text-[11px] font-medium transition shadow-sm"
+                                className="px-3.5 py-1 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded-full text-[11px] font-bold transition shadow-sm"
                                 title="Process volume return"
                               >
                                 Return
@@ -544,7 +544,7 @@ export const LibrarianDeskPage = () => {
                             </>
                           )}
                           {isReturned && (
-                            <span className="text-[11px] text-ink-muted font-mono italic">
+                            <span className="text-[11px] text-ink-muted font-mono font-medium">
                               Closed on {new Date(iss.returnedAt).toLocaleDateString()}
                             </span>
                           )}

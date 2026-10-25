@@ -71,80 +71,92 @@ export const AdminReportsPage = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="pb-6 border-b border-sand flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+      <div className="pb-6 border-b border-sand/70 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
-          <span className="text-xs uppercase tracking-widest small-caps font-sans font-medium text-ink-muted">
+          <span className="text-xs uppercase tracking-wider font-semibold text-ink-muted">
             Institutional Governance & Archival Health
           </span>
-          <h1 className="font-serif text-3xl font-bold text-ink tracking-tight mt-1 flex items-center gap-2">
-            <BarChart3 className="w-8 h-8 text-venice-blue stroke-[1.5]" />
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-ink tracking-tight mt-1 flex items-center gap-2.5">
+            <BarChart3 className="w-8 h-8 text-venice-blue stroke-[2]" />
             <span>Circulation & Analytics Reports</span>
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-ink-muted mt-1 font-medium">
             Real-time telemetry on book usage, loan velocity, overdue liabilities, and collection distribution.
           </p>
         </div>
 
         <button
           onClick={() => alert('Simulated: Report exported to CSV.')}
-          className="inline-flex items-center gap-1.5 px-4 py-2 border border-sand bg-merino-light hover:bg-sand text-venice-blue rounded text-xs uppercase small-caps font-semibold tracking-wider transition self-start sm:self-auto"
+          className="inline-flex items-center gap-2 px-5 py-2.5 border border-sand bg-merino-light hover:bg-sand text-venice-blue rounded-full text-xs font-bold uppercase tracking-wider transition shadow-sm self-start sm:self-auto"
         >
-          <Download className="w-3.5 h-3.5" />
+          <Download className="w-4 h-4" />
           <span>Export Audit (CSV)</span>
         </button>
       </div>
 
-      {/* Metric Cards Banner */}
+      {/* Metric Cards Banner - Bento Pastel Tiles */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-        <div className="paper-card rounded-md p-4">
-          <div className="flex items-center justify-between text-ink-muted mb-1">
-            <span className="text-xs small-caps uppercase font-semibold">Total Stock</span>
-            <BookOpen className="w-4 h-4 text-venice-blue" />
+        {/* Yellow Bento Card: Total Stock */}
+        <div className="bg-[#FEF8E7] border border-amber-200/90 rounded-3xl p-5 shadow-bento hover:shadow-bento-hover transition-all">
+          <div className="flex items-center justify-between text-amber-900 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wider">Total Stock</span>
+            <div className="w-8 h-8 rounded-full bg-amber-200/80 text-amber-900 flex items-center justify-center">
+              <BookOpen className="w-4 h-4" />
+            </div>
           </div>
-          <div className="font-serif text-2xl font-bold text-ink">
-            {summary.totalCopies} <span className="text-xs font-sans text-ink-muted font-normal">copies</span>
+          <div className="text-3xl font-extrabold text-amber-950 tracking-tight mt-1">
+            {summary.totalCopies} <span className="text-xs text-amber-800/80 font-medium">copies</span>
           </div>
-          <div className="text-[11px] text-ink-muted mt-0.5">
-            Across {summary.totalBooks} distinct catalogued titles
-          </div>
-        </div>
-
-        <div className="paper-card rounded-md p-4">
-          <div className="flex items-center justify-between text-ink-muted mb-1">
-            <span className="text-xs small-caps uppercase font-semibold">Active Loans</span>
-            <TrendingUp className="w-4 h-4 text-rock-blue" />
-          </div>
-          <div className="font-serif text-2xl font-bold text-venice-blue">
-            {summary.activeLoans} <span className="text-xs font-sans text-ink-muted font-normal">volumes</span>
-          </div>
-          <div className="text-[11px] text-ink-muted mt-0.5">
-            Active circulation in patron hands
+          <div className="text-xs text-amber-800/80 mt-1 font-medium">
+            Across {summary.totalBooks} catalogued titles
           </div>
         </div>
 
-        <div className="paper-card rounded-md p-4">
-          <div className="flex items-center justify-between text-ink-muted mb-1">
-            <span className="text-xs small-caps uppercase font-semibold">Overdue Breaches</span>
-            <AlertCircle className="w-4 h-4 text-warm-red" />
+        {/* Sky Bento Card: Active Loans */}
+        <div className="bg-[#F0F9FF] border border-sky-200/90 rounded-3xl p-5 shadow-bento hover:shadow-bento-hover transition-all">
+          <div className="flex items-center justify-between text-sky-900 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wider">Active Loans</span>
+            <div className="w-8 h-8 rounded-full bg-sky-200/80 text-sky-900 flex items-center justify-center">
+              <TrendingUp className="w-4 h-4" />
+            </div>
           </div>
-          <div className="font-serif text-2xl font-bold text-warm-red">
-            {summary.overdueLoans} <span className="text-xs font-sans text-ink-muted font-normal">patrons</span>
+          <div className="text-3xl font-extrabold text-sky-950 tracking-tight mt-1">
+            {summary.activeLoans} <span className="text-xs text-sky-800/80 font-medium">volumes</span>
           </div>
-          <div className="text-[11px] text-ink-muted mt-0.5">
+          <div className="text-xs text-sky-800/80 mt-1 font-medium">
+            Active in patron circulation
+          </div>
+        </div>
+
+        {/* Rose Bento Card: Overdue Breaches */}
+        <div className="bg-[#FDF2F8] border border-pink-200/90 rounded-3xl p-5 shadow-bento hover:shadow-bento-hover transition-all">
+          <div className="flex items-center justify-between text-pink-900 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wider">Overdue Breaches</span>
+            <div className="w-8 h-8 rounded-full bg-pink-200/80 text-pink-900 flex items-center justify-center">
+              <AlertCircle className="w-4 h-4" />
+            </div>
+          </div>
+          <div className="text-3xl font-extrabold text-warm-red tracking-tight mt-1">
+            {summary.overdueLoans} <span className="text-xs text-pink-800/80 font-medium">patrons</span>
+          </div>
+          <div className="text-xs text-pink-800/80 mt-1 font-medium">
             Pending penalties: ₹{summary.pendingFines}
           </div>
         </div>
 
-        <div className="paper-card rounded-md p-4">
-          <div className="flex items-center justify-between text-ink-muted mb-1">
-            <span className="text-xs small-caps uppercase font-semibold">Total Fines Settled</span>
-            <Banknote className="w-4 h-4 text-sage" />
+        {/* Mint Bento Card: Total Fines Settled */}
+        <div className="bg-[#F0FDF4] border border-emerald-200/90 rounded-3xl p-5 shadow-bento hover:shadow-bento-hover transition-all">
+          <div className="flex items-center justify-between text-emerald-900 mb-1">
+            <span className="text-xs font-bold uppercase tracking-wider">Fines Settled</span>
+            <div className="w-8 h-8 rounded-full bg-emerald-200/80 text-emerald-900 flex items-center justify-center">
+              <Banknote className="w-4 h-4" />
+            </div>
           </div>
-          <div className="font-serif text-2xl font-bold text-ink">
+          <div className="text-3xl font-extrabold text-emerald-950 tracking-tight mt-1">
             ₹{summary.totalFinesCollected}
           </div>
-          <div className="text-[11px] text-ink-muted mt-0.5">
-            Credited to Library Acquisition Fund
+          <div className="text-xs text-emerald-800/80 mt-1 font-medium">
+            Acquisitions fund credit
           </div>
         </div>
       </div>
@@ -152,17 +164,17 @@ export const AdminReportsPage = () => {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-8">
         {/* Most-Issued Books Bar Chart (7 Cols) */}
-        <div className="lg:col-span-7 paper-card rounded-md p-5 border border-sand">
-          <div className="pb-3 border-b border-sand mb-4 flex items-center justify-between">
+        <div className="lg:col-span-7 bento-card rounded-3xl p-6 border border-sand shadow-bento">
+          <div className="pb-3.5 border-b border-sand/70 mb-4 flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-base font-bold text-ink">
+              <h2 className="text-lg font-bold text-ink">
                 Highest Circulation Titles (Lifetime Issues)
               </h2>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-ink-muted font-medium mt-0.5">
                 Volumes with the highest checkout demand across semesters.
               </p>
             </div>
-            <span className="text-[11px] font-mono px-2 py-0.5 bg-sand/40 rounded text-venice-blue">
+            <span className="text-xs font-mono font-bold px-3 py-1 bg-sand/60 rounded-full text-venice-blue">
               Top 8 Titles
             </span>
           </div>
@@ -198,12 +210,12 @@ export const AdminReportsPage = () => {
         </div>
 
         {/* Category Breakdown Donut Chart (5 Cols) */}
-        <div className="lg:col-span-5 paper-card rounded-md p-5 border border-sand">
-          <div className="pb-3 border-b border-sand mb-4">
-            <h2 className="font-serif text-base font-bold text-ink">
+        <div className="lg:col-span-5 bento-card rounded-3xl p-6 border border-sand shadow-bento">
+          <div className="pb-3.5 border-b border-sand/70 mb-4">
+            <h2 className="text-lg font-bold text-ink">
               Catalogue by Discipline
             </h2>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-ink-muted font-medium mt-0.5">
               Holdings distribution across core curricular divisions.
             </p>
           </div>
@@ -228,7 +240,7 @@ export const AdminReportsPage = () => {
                   contentStyle={{
                     backgroundColor: '#FAF6ED',
                     border: '1px solid #E4DAC5',
-                    borderRadius: '4px',
+                    borderRadius: '16px',
                     fontSize: '12px'
                   }}
                   formatter={(value, name, item) => [`${value} titles (${item.payload.loans} loans)`, item.payload.name]}
@@ -243,22 +255,22 @@ export const AdminReportsPage = () => {
         </div>
 
         {/* Monthly Circulation Trend Line/Area Chart (12 Cols) */}
-        <div className="lg:col-span-12 paper-card rounded-md p-5 border border-sand">
-          <div className="pb-3 border-b border-sand mb-4 flex items-center justify-between">
+        <div className="lg:col-span-12 bento-card rounded-3xl p-6 border border-sand shadow-bento">
+          <div className="pb-3.5 border-b border-sand/70 mb-4 flex items-center justify-between">
             <div>
-              <h2 className="font-serif text-base font-bold text-ink">
+              <h2 className="text-lg font-bold text-ink">
                 Monthly Circulation Velocity (Issues vs. Returns)
               </h2>
-              <p className="text-xs text-ink-muted">
+              <p className="text-xs text-ink-muted font-medium mt-0.5">
                 Transaction turnover tracking stack flow and desk throughput.
               </p>
             </div>
-            <div className="flex items-center gap-3 text-xs font-mono text-ink-muted">
+            <div className="flex items-center gap-3 text-xs font-mono text-ink-muted font-medium">
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-venice-blue" /> Issues
+                <span className="w-2.5 h-2.5 rounded-full bg-venice-blue" /> Issues
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2.5 h-2.5 rounded-sm bg-rock-blue" /> Returns
+                <span className="w-2.5 h-2.5 rounded-full bg-rock-blue" /> Returns
               </span>
             </div>
           </div>
@@ -285,7 +297,7 @@ export const AdminReportsPage = () => {
                   contentStyle={{
                     backgroundColor: '#FAF6ED',
                     border: '1px solid #E4DAC5',
-                    borderRadius: '4px',
+                    borderRadius: '16px',
                     fontSize: '12px'
                   }}
                 />
@@ -317,53 +329,53 @@ export const AdminReportsPage = () => {
       <div className="mt-10">
         <div className="pb-3 border-b border-sand flex items-center justify-between">
           <div>
-            <h2 className="font-serif text-xl font-bold text-ink">
+            <h2 className="text-2xl font-extrabold text-ink tracking-tight">
               Overdue Patron Ledger
             </h2>
-            <p className="text-xs text-ink-muted">
+            <p className="text-xs text-ink-muted font-medium mt-0.5">
               Patrons whose borrowing window has elapsed without desk return.
             </p>
           </div>
-          <span className="text-xs px-2.5 py-1 rounded bg-warm-red/10 border border-warm-red/25 text-warm-red font-medium">
+          <span className="text-xs px-3 py-1 rounded-full bg-warm-red/10 border border-warm-red/25 text-warm-red font-bold">
             {overdueMembers?.length || 0} Delinquent Loans
           </span>
         </div>
 
-        <div className="mt-4 paper-card rounded-md overflow-hidden border border-sand">
+        <div className="mt-4 bg-merino-light rounded-3xl overflow-hidden border border-sand shadow-bento">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="bg-sand/30 border-b border-sand font-sans small-caps uppercase tracking-wider text-ink-muted">
-                  <th className="py-2.5 px-4">Patron Name</th>
-                  <th className="py-2.5 px-4">Member Card</th>
-                  <th className="py-2.5 px-4">Volume on Loan</th>
-                  <th className="py-2.5 px-4">Elapsed Days</th>
-                  <th className="py-2.5 px-4">Accrued Penalty</th>
-                  <th className="py-2.5 px-4 text-right">Action</th>
+                <tr className="bg-sand/40 border-b border-sand font-bold uppercase tracking-wider text-ink-muted">
+                  <th className="py-3 px-4">Patron Name</th>
+                  <th className="py-3 px-4">Member Card</th>
+                  <th className="py-3 px-4">Volume on Loan</th>
+                  <th className="py-3 px-4">Elapsed Days</th>
+                  <th className="py-3 px-4">Accrued Penalty</th>
+                  <th className="py-3 px-4 text-right">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-sand/50">
                 {overdueMembers?.map((m, idx) => (
-                  <tr key={idx} className="hover:bg-sand/15 transition">
-                    <td className="py-2.5 px-4 font-semibold text-ink">
+                  <tr key={idx} className="hover:bg-sand/20 transition">
+                    <td className="py-3 px-4 font-bold text-ink">
                       {m.name}
                     </td>
-                    <td className="py-2.5 px-4 font-mono text-ink-muted">
+                    <td className="py-3 px-4 font-mono text-ink-muted font-medium">
                       {m.memberId}
                     </td>
-                    <td className="py-2.5 px-4 font-serif text-venice-blue">
+                    <td className="py-3 px-4 font-bold text-venice-blue">
                       {m.book}
                     </td>
-                    <td className="py-2.5 px-4 font-mono font-bold text-warm-red">
+                    <td className="py-3 px-4 font-mono font-extrabold text-warm-red">
                       +{m.overdueDays} days
                     </td>
-                    <td className="py-2.5 px-4 font-mono font-bold text-warm-red">
+                    <td className="py-3 px-4 font-mono font-extrabold text-warm-red">
                       ₹{m.fine}
                     </td>
-                    <td className="py-2.5 px-4 text-right">
+                    <td className="py-3 px-4 text-right">
                       <button
                         onClick={() => alert(`Notice reminder dispatched to ${m.name}.`)}
-                        className="px-2.5 py-1 text-[11px] rounded bg-merino-light border border-sand hover:bg-sand text-ink transition"
+                        className="px-3.5 py-1 text-[11px] rounded-full bg-merino-light border border-sand hover:bg-sand text-ink transition font-semibold"
                       >
                         Send Notice
                       </button>
