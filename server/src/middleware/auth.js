@@ -15,12 +15,14 @@
  */
 import jwt from 'jsonwebtoken';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'bookd_super_secret_jwt_key_demo_evaluation';
+
 export const authenticate = (req, res, next) => {
   const header = req.headers.authorization || '';
   if (!header.startsWith('Bearer '))
     return res.status(401).json({ message: 'Authentication required. Missing Bearer token.' });
   try {
-    const payload = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
+    const payload = jwt.verify(header.split(' ')[1], JWT_SECRET);
     req.user = { id: payload.id, role: payload.role };
     next();
   } catch {

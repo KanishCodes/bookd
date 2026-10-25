@@ -24,8 +24,10 @@ import jwt from 'jsonwebtoken';
 import { userRepository, toPublicUser } from '../repositories/userRepository.js';
 import { issueRepository } from '../repositories/issueRepository.js';
 
+const JWT_SECRET = process.env.JWT_SECRET || 'bookd_super_secret_jwt_key_demo_evaluation';
+
 const signToken = (user) =>
-  jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
+  jwt.sign({ id: user.id, role: user.role }, JWT_SECRET, { expiresIn: '7d' });
 
 export const login = async (req, res) => {
   try {
