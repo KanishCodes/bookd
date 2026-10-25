@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Navbar } from './components/Navbar.jsx';
 import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 
+import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import CataloguePage from './pages/CataloguePage.jsx';
 import MemberDashboardPage from './pages/MemberDashboardPage.jsx';
@@ -23,8 +24,8 @@ export function App() {
 
       <main className="flex-1">
         <Routes>
-          {/* Default redirect to Catalogue */}
-          <Route path="/" element={<Navigate to="/catalogue" replace />} />
+          {/* Main Landing Page */}
+          <Route path="/" element={<LandingPage />} />
 
           {/* Authentication */}
           <Route path="/login" element={<LoginPage />} />

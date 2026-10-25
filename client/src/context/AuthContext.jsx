@@ -20,13 +20,8 @@ export const AuthProvider = ({ children }) => {
           setToken(storedToken);
           setUser(JSON.parse(storedUser));
         } else {
-          // By default, set member demo account so the UI works right away without extra clicks
-          const defaultMember = MOCK_USERS[0];
-          const demoToken = `mock-jwt-token-for-${defaultMember.role}-${defaultMember.id}`;
-          setToken(demoToken);
-          setUser(defaultMember);
-          localStorage.setItem('bookd_token', demoToken);
-          localStorage.setItem('bookd_user', JSON.stringify(defaultMember));
+          setToken(null);
+          setUser(null);
         }
       } catch (err) {
         console.error('Failed to restore auth session:', err);

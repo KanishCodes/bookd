@@ -10,7 +10,8 @@
 
 | Page / Feature | Route | Status | Notes |
 | :--- | :--- | :--- | :--- |
-| **Login Page** | `/login` | **LIVE-READY** | Wired to `client/src/api/auth.api.js`. Has 1-click fill buttons for 3 demo accounts. |
+| **Landing Page** | `/` | **LIVE-READY** | Main editorial entry page. Shows curated highlights, system features, and 1-click evaluation profile launchers. |
+| **Login Page** | `/login` | **LIVE-READY** | Wired to `client/src/api/auth.api.js`. Has 1-click fill buttons for 3 demo accounts. Redirects to `/catalogue`. |
 | **Catalogue & Search** | `/catalogue` | **LIVE-READY** | Wired to `client/src/api/books.api.js`. Supports search, category filter, availability filter, grid/list view, book detail drawer, and staff Add/Edit/Delete. |
 | **Member Dashboard** | `/dashboard` | **LIVE-READY** | Wired to `client/src/api/issues.api.js`. Live loans, days left, overdue badge, fine amount from API, and 1-click **Renew** button (+14 days). |
 | **Librarian Desk** | `/librarian` | **LIVE-READY** | Wired to `client/src/api/issues.api.js` & `books.api.js`. Fast 1-click book checkout, return processing, active loans table with overdue filter. |

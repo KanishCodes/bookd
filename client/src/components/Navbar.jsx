@@ -109,7 +109,7 @@ export const Navbar = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo & Brand */}
           <div className="flex items-center gap-8">
-            <Link to="/catalogue" className="flex items-center gap-2.5 group">
+            <Link to="/" className="flex items-center gap-2.5 group">
               <div className="w-9 h-9 rounded bg-venice-blue text-merino flex items-center justify-center font-serif text-lg font-bold shadow-sm group-hover:bg-venice-blue-hover transition">
                 B
               </div>
