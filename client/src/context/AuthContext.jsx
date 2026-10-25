@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { login as apiLogin, getMe as apiGetMe } from '../api/auth.api.js';
+import { login as apiLogin, register as apiRegister, getMe as apiGetMe } from '../api/auth.api.js';
 import { MOCK_USERS } from '../mock/users.js';
 
 const AuthContext = createContext(null);
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Initialize from localStorage or set default demo member for instant evaluation
+  // Initialize from localStorage
   useEffect(() => {
     const initializeAuth = async () => {
       try {
@@ -35,6 +35,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     const data = await apiLogin({ email, password });
+    setToken(data.token);
+    setUser(data.user);
+    localStorage.setItem('bookd_token', data.token);
+    localStorage.setItem('bookd_user', JSON.stringify(data.user));
+    return data;
+  };
+
+  const register = async (userData) => {
+    const data = await apiRegister(userData);
     setToken(data.token);
     setUser(data.user);
     localStorage.setItem('bookd_token', data.token);
@@ -83,6 +92,7 @@ export const AuthProvider = ({ children }) => {
         isAuthenticated: !!user && !!token,
         loading,
         login,
+        register,
         logout,
         switchDemoRole,
         refreshUser

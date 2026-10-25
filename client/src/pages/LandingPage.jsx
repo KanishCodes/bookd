@@ -133,22 +133,22 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* 1-Click Evaluation Demo Access Panel */}
+      {/* Role-Based Archival Clearances */}
       <section className="py-12 px-4 sm:px-6 lg:px-8 border-b border-sand bg-sand-light/50">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-8">
             <span className="text-xs uppercase tracking-widest small-caps font-mono text-venice-blue font-semibold">
-              Evaluation Fast Access
+              Institutional Clearance System
             </span>
             <h2 className="font-serif text-2xl font-bold text-ink mt-1">
-              Test Instant Role-Based Profiles
+              Role-Governed Access Control
             </h2>
             <p className="text-xs text-ink-muted mt-1 max-w-lg mx-auto">
-              Click any profile below to immediately log in and explore their role-specific dashboard and permissions.
+              Institutional credentials route patrons, desk librarians, and academic administrators to their respective workflows.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
             {/* Member Card */}
             <div className="paper-card rounded-md p-5 border border-sand flex flex-col justify-between hover:border-rock-blue transition">
               <div>
@@ -159,22 +159,15 @@ export const LandingPage = () => {
                   <UserCheck className="w-4 h-4 text-venice-blue" />
                 </div>
                 <h3 className="font-serif font-bold text-ink text-lg">
-                  Library Member
+                  Student Member
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
-                  member@bookd.test
+                  member@bookd.test (or kanish@bookd.test)
                 </p>
                 <p className="text-xs text-ink-muted mt-2.5 leading-relaxed">
-                  Borrow books, track active loans, view overdue days & fine amounts, and renew loans with 1 click (+14 days).
+                  Browse physical holdings, manage your active 14-day loans, review return history, and renew items directly from your dashboard.
                 </p>
               </div>
-
-              <button
-                onClick={() => handleQuickLogin('member@bookd.test')}
-                className="mt-4 w-full py-2 bg-merino-light border border-sand hover:bg-sand text-ink text-xs font-semibold uppercase small-caps tracking-wider rounded transition flex items-center justify-center gap-1.5"
-              >
-                <span>Log In as Member →</span>
-              </button>
             </div>
 
             {/* Librarian Card */}
@@ -182,7 +175,7 @@ export const LandingPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] small-caps uppercase tracking-wider px-2 py-0.5 rounded bg-sage/20 text-sage font-semibold">
-                    Staff Clearance
+                    Circulation Staff
                   </span>
                   <Library className="w-4 h-4 text-sage" />
                 </div>
@@ -190,19 +183,12 @@ export const LandingPage = () => {
                   Desk Librarian
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
-                  librarian@bookd.test
+                  librarian@bookd.test (or naisha@bookd.test)
                 </p>
                 <p className="text-xs text-ink-muted mt-2.5 leading-relaxed">
-                  High-density circulation desk, rapid checkout intake, return processing, active register, and book management.
+                  Operate counter circulation: rapid book checkout, instant return intake with fine calculation, and stack inventory acquisition.
                 </p>
               </div>
-
-              <button
-                onClick={() => handleQuickLogin('librarian@bookd.test')}
-                className="mt-4 w-full py-2 bg-venice-blue hover:bg-venice-blue-hover text-merino text-xs font-semibold uppercase small-caps tracking-wider rounded transition flex items-center justify-center gap-1.5 shadow-sm"
-              >
-                <span>Log In as Librarian →</span>
-              </button>
             </div>
 
             {/* Admin Card */}
@@ -210,7 +196,7 @@ export const LandingPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] small-caps uppercase tracking-wider px-2 py-0.5 rounded bg-venice-blue/15 text-venice-blue font-semibold">
-                    Executive Clearance
+                    Academic Governance
                   </span>
                   <BarChart3 className="w-4 h-4 text-venice-blue" />
                 </div>
@@ -218,20 +204,23 @@ export const LandingPage = () => {
                   Library Administrator
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
-                  admin@bookd.test
+                  admin@bookd.test (or patel@bookd.test)
                 </p>
                 <p className="text-xs text-ink-muted mt-2.5 leading-relaxed">
-                  Circulation velocity analytics, Recharts telemetry, discipline distribution, overdue liabilities, and fine reports.
+                  Monitor high-demand titles via Recharts, circulation turnover velocity, delinquent patron records, and total fine recovery.
                 </p>
               </div>
-
-              <button
-                onClick={() => handleQuickLogin('admin@bookd.test')}
-                className="mt-4 w-full py-2 bg-merino-light border border-sand hover:bg-sand text-ink text-xs font-semibold uppercase small-caps tracking-wider rounded transition flex items-center justify-center gap-1.5"
-              >
-                <span>Log In as Admin →</span>
-              </button>
             </div>
+          </div>
+
+          <div className="mt-8 text-center">
+            <Link
+              to="/login"
+              className="inline-flex items-center gap-2 px-6 py-2.5 bg-venice-blue hover:bg-venice-blue-hover text-merino rounded text-xs font-medium uppercase small-caps tracking-wider transition shadow-sm"
+            >
+              <span>Sign In with University Credentials</span>
+              <ArrowRight className="w-4 h-4" />
+            </Link>
           </div>
         </div>
       </section>

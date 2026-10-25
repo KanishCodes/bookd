@@ -65,57 +65,6 @@ export const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-merino border-b border-sand shadow-sm">
-      {/* Top Demo Banner / Quick Role Switcher (Dismissible) */}
-      {showDemoBar && (
-        <div className="bg-sand-light border-b border-sand/70 px-4 py-1.5 text-xs flex flex-wrap items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-ink-muted">
-            <span className="font-serif italic text-venice-blue font-medium">Evaluation Demo Mode:</span>
-            <span>Switch role to test access:</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => switchDemoRole('member')}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-medium transition ${
-                  role === 'member'
-                    ? 'bg-venice-blue text-merino shadow-sm'
-                    : 'bg-merino hover:bg-sand text-ink-muted border border-sand'
-                }`}
-              >
-                Member
-              </button>
-              <button
-                onClick={() => switchDemoRole('librarian')}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-medium transition ${
-                  role === 'librarian'
-                    ? 'bg-venice-blue text-merino shadow-sm'
-                    : 'bg-merino hover:bg-sand text-ink-muted border border-sand'
-                }`}
-              >
-                Librarian
-              </button>
-              <button
-                onClick={() => switchDemoRole('admin')}
-                className={`px-2.5 py-0.5 rounded text-[11px] font-medium transition ${
-                  role === 'admin'
-                    ? 'bg-venice-blue text-merino shadow-sm'
-                    : 'bg-merino hover:bg-sand text-ink-muted border border-sand'
-                }`}
-              >
-                Administrator
-              </button>
-            </div>
-            <button
-              onClick={() => setShowDemoBar(false)}
-              className="text-[10px] text-ink-muted hover:text-ink px-1 py-0.5 rounded hover:bg-sand transition"
-              title="Hide demo banner"
-            >
-              ✕ Hide
-            </button>
-          </div>
-        </div>
-      )}
-
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
