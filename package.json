@@ -1,0 +1,16 @@
+{
+  "name": "bookd-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Book'd - Role-Based Library Management System (UI & Server Scaffold)",
+  "scripts": {
+    "dev": "concurrently -n \"CLIENT,SERVER\" -c \"blue,green\" \"npm --prefix client run dev\" \"npm --prefix server run dev\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run dev",
+    "install:all": "npm install && npm --prefix client install && npm --prefix server install",
+    "build:client": "npm --prefix client run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

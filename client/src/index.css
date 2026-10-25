@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-merino: #F5EEDD;
+    --color-rock-blue: #84B3CE;
+    --color-venice-blue: #16587B;
+    --color-ink: #0E2B3D;
+  }
+
+  body {
+    background-color: #F5EEDD;
+    color: #0E2B3D;
+    background-image: radial-gradient(rgba(22, 88, 123, 0.03) 1px, transparent 1px);
+    background-size: 24px 24px;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  /* Tabular numbers for clean tabular data and dates */
+  .tabular-nums, table, [data-tabular] {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+@layer utilities {
+  .small-caps {
+    font-variant-caps: all-small-caps;
+    letter-spacing: 0.06em;
+  }
+  
+  .paper-border {
+    border: 1px solid #E4DAC5;
+  }
+
+  .paper-card {
+    background-color: #FAF6ED;
+    border: 1px solid #E4DAC5;
+  }
+}
+
+/* Custom subtle scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F0E9DA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #C2DCEB;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #84B3CE;
+}

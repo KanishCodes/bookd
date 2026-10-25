@@ -1,0 +1,62 @@
+export const MOCK_RESERVATIONS = [
+  {
+    id: "res-201",
+    bookId: "b-103",
+    bookTitle: "Introduction to Algorithms (CLRS)",
+    bookAuthor: "Thomas H. Cormen et al.",
+    isbn: "978-0262046305",
+    userId: "u-1",
+    userName: "Kanish Sharma",
+    memberId: "MEM-2024-001",
+    reservedAt: "2026-10-21T09:30:00.000Z",
+    queuePosition: 1,
+    status: "WAITING",
+    estimatedDate: "2026-11-04",
+    shelfLocation: "CS-C3-01"
+  },
+  {
+    id: "res-202",
+    bookId: "b-110",
+    bookTitle: "The Great Gatsby",
+    bookAuthor: "F. Scott Fitzgerald",
+    isbn: "978-0743273565",
+    userId: "u-1",
+    userName: "Kanish Sharma",
+    memberId: "MEM-2024-001",
+    reservedAt: "2026-10-22T14:00:00.000Z",
+    queuePosition: 2,
+    status: "WAITING",
+    estimatedDate: "2026-11-06",
+    shelfLocation: "LIT-E3-07"
+  },
+  {
+    id: "res-203",
+    bookId: "b-123",
+    bookTitle: "A Pattern Language",
+    bookAuthor: "Christopher Alexander et al.",
+    isbn: "978-0195019193",
+    userId: "u-7",
+    userName: "Vikram Malhotra",
+    memberId: "MEM-2024-145",
+    reservedAt: "2026-10-23T11:15:00.000Z",
+    queuePosition: 1,
+    status: "READY_FOR_PICKUP",
+    estimatedDate: "2026-10-27",
+    shelfLocation: "ART-C2-22"
+  },
+  {
+    id: "res-204",
+    bookId: "b-102",
+    bookTitle: "Designing Data-Intensive Applications",
+    bookAuthor: "Martin Kleppmann",
+    isbn: "978-1449373320",
+    userId: "u-9",
+    userName: "Aditya Nair",
+    memberId: "MEM-2024-203",
+    reservedAt: "2026-10-24T16:20:00.000Z",
+    queuePosition: 3,
+    status: "WAITING",
+    estimatedDate: "2026-11-08",
+    shelfLocation: "CS-B2-11"
+  }
+];
