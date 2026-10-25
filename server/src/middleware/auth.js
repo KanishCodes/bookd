@@ -13,30 +13,23 @@
  *    - Verify req.user exists and req.user.role is in allowedRoles array
  *    - Return 403 { message: "Access forbidden: insufficient role permissions" } if unauthorized
  */
+import jwt from 'jsonwebtoken';
 
 export const authenticate = (req, res, next) => {
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+  const header = req.headers.authorization || '';
+  if (!header.startsWith('Bearer '))
     return res.status(401).json({ message: 'Authentication required. Missing Bearer token.' });
+  try {
+    const payload = jwt.verify(header.split(' ')[1], process.env.JWT_SECRET);
+    req.user = { id: payload.id, role: payload.role };
+    next();
+  } catch {
+    res.status(401).json({ message: 'Invalid or expired token.' });
   }
-
-  // TODO: Naisha - implement jwt.verify(token, process.env.JWT_SECRET)
-  // For now in scaffold: mock decode
-  const token = authHeader.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ message: 'Invalid token format.' });
-  }
-
-  // Temporary stub for development: pass through
-  next();
 };
 
-export const requireRole = (allowedRoles = []) => {
-  return (req, res, next) => {
-    // TODO: Naisha - check req.user.role in allowedRoles
-    // if (!req.user || !allowedRoles.includes(req.user.role)) {
-    //   return res.status(403).json({ message: 'Forbidden: Insufficient privileges.' });
-    // }
-    next();
-  };
+export const requireRole = (allowedRoles = []) => (req, res, next) => {
+  if (!req.user || !allowedRoles.includes(req.user.role))
+    return res.status(403).json({ message: 'Access forbidden: insufficient role permissions' });
+  next();
 };
