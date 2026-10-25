@@ -154,12 +154,12 @@ export const LandingPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] small-caps uppercase tracking-wider px-2 py-0.5 rounded bg-rock-blue/20 text-venice-blue font-semibold">
-                    Patron Role
+                    Patron / Student
                   </span>
                   <UserCheck className="w-4 h-4 text-venice-blue" />
                 </div>
                 <h3 className="font-serif font-bold text-ink text-lg">
-                  Kanish Sharma
+                  Library Member
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
                   member@bookd.test
@@ -182,12 +182,12 @@ export const LandingPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] small-caps uppercase tracking-wider px-2 py-0.5 rounded bg-sage/20 text-sage font-semibold">
-                    Staff Role
+                    Staff Clearance
                   </span>
                   <Library className="w-4 h-4 text-sage" />
                 </div>
                 <h3 className="font-serif font-bold text-ink text-lg">
-                  Naisha Roy
+                  Desk Librarian
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
                   librarian@bookd.test
@@ -210,12 +210,12 @@ export const LandingPage = () => {
               <div>
                 <div className="flex items-center justify-between mb-3">
                   <span className="text-[10px] small-caps uppercase tracking-wider px-2 py-0.5 rounded bg-venice-blue/15 text-venice-blue font-semibold">
-                    Executive Role
+                    Executive Clearance
                   </span>
                   <BarChart3 className="w-4 h-4 text-venice-blue" />
                 </div>
                 <h3 className="font-serif font-bold text-ink text-lg">
-                  Dr. Arvind Patel
+                  Library Administrator
                 </h3>
                 <p className="text-xs font-mono text-ink-muted">
                   admin@bookd.test

@@ -68,7 +68,7 @@ export const LoginPage = () => {
                 }`}
               >
                 <div className="font-medium truncate">Member</div>
-                <div className="text-[10px] opacity-75">Kanish</div>
+                <div className="text-[10px] opacity-75">Student</div>
               </button>
 
               <button
@@ -81,7 +81,7 @@ export const LoginPage = () => {
                 }`}
               >
                 <div className="font-medium truncate">Librarian</div>
-                <div className="text-[10px] opacity-75">Naisha</div>
+                <div className="text-[10px] opacity-75">Desk Staff</div>
               </button>
 
               <button
@@ -94,7 +94,7 @@ export const LoginPage = () => {
                 }`}
               >
                 <div className="font-medium truncate">Admin</div>
-                <div className="text-[10px] opacity-75">Dr. Patel</div>
+                <div className="text-[10px] opacity-75">Executive</div>
               </button>
             </div>
           </div>
