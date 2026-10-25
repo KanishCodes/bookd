@@ -1,3 +1,4 @@
+import { authenticate, requireRole } from '../middleware/auth.js';
 import { Router } from 'express';
 import {
   getBooks,
@@ -6,17 +7,15 @@ import {
   updateBook,
   deleteBook
 } from '../controllers/bookController.js';
-import { authenticate, requireRole } from '../middleware/auth.js';
 
 const router = Router();
 
-const staff = [authenticate, requireRole(['librarian', 'admin'])];
-
-// Public / member accessible
+// Public / Member accessible
 router.get('/', getBooks);
 router.get('/:id', getBookById);
 
-// Staff only
+// Staff accessible (TODO for Naisha: attach authenticate + requireRole(['librarian', 'admin']) middleware)
+const staff = [authenticate, requireRole(['librarian', 'admin'])];
 router.post('/', ...staff, createBook);
 router.put('/:id', ...staff, updateBook);
 router.delete('/:id', ...staff, deleteBook);

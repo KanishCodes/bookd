@@ -60,7 +60,15 @@ class IssueRepository {
     const found = this.issues.find(iss => iss.id === id);
     return found ? this._enrichIssue(found) : null;
   }
+  async hasActiveLoan(userId, bookId) {
+    return this.issues.some(
+      i => i.userId === userId && i.bookId === bookId && !i.returnedAt
+    );
+  }
 
+  async countActiveLoans(userId) {
+    return this.issues.filter(i => i.userId === userId && !i.returnedAt).length;
+  }
   async createIssue({ bookId, bookTitle, bookAuthor, userId, userName, userEmail, memberId }) {
     const now = new Date();
     const dueDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days loan
@@ -93,6 +101,11 @@ class IssueRepository {
     if (index === -1) return null;
 
     const issue = this.issues[index];
+        if (issue.returnedAt) {
+      const err = new Error('This loan has already been returned');
+      err.status = 400;
+      throw err;
+    }
     const now = new Date().toISOString();
     const fine = calculateFine(issue.dueAt, now);
 
