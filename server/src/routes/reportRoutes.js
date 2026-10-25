@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
   getOverdueReport,
   getPopularBooks,
-  getFinesReport
+  getFinesReport,
+  getSummaryReport
 } from '../controllers/reportController.js';
 import { authenticate, requireRole } from '../middleware/auth.js';
 
@@ -12,5 +13,6 @@ const router = Router();
 router.get('/overdue', authenticate, requireRole(['admin']), getOverdueReport);
 router.get('/popular', authenticate, requireRole(['admin']), getPopularBooks);
 router.get('/fines', authenticate, requireRole(['admin']), getFinesReport);
+router.get('/summary', authenticate, requireRole(['admin']), getSummaryReport);
 
 export default router;

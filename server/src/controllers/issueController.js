@@ -1,7 +1,7 @@
 import { issueRepository } from '../repositories/issueRepository.js';
 import { bookRepository } from '../repositories/bookRepository.js';
 import { userRepository } from '../repositories/userRepository.js';
-
+import { reservationRepository } from '../repositories/reservationRepository.js';
 const MAX_ACTIVE_LOANS = 5;
 /**
  * ============================================================================
@@ -45,7 +45,7 @@ export const issueBook = async (req, res) => {
       userEmail: user.email,
       memberId: user.memberId
     });
-
+    reservationRepository.fulfill(user.id, book.id);
     res.status(201).json(newIssue);
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message || 'Failed to issue book' });
@@ -56,6 +56,7 @@ export const returnBook = async (req, res) => {
   try {
     const returned = await issueRepository.returnIssue(req.params.id);
     if (!returned) return res.status(404).json({ message: 'Issue record not found' });
+        reservationRepository.markNextReady(returned.bookId);
     res.json(returned);
   } catch (error) {
     res.status(error.status || 500).json({ message: error.message || 'Failed to process return' });

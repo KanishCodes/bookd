@@ -1,4 +1,4 @@
-import { INITIAL_USERS } from '../data/seedData.js';
+
 
 /**
  * ============================================================================
@@ -18,6 +18,7 @@ import { INITIAL_USERS } from '../data/seedData.js';
  *   Header: Authorization: Bearer <token>
  *   Response: { user: { id, name, email, role, memberId, department, phone, activeIssuesCount, totalFines } }
  */
+import { fineRepository } from '../repositories/fineRepository.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { userRepository, toPublicUser } from '../repositories/userRepository.js';
@@ -67,10 +68,8 @@ export const getMe = async (req, res) => {
 
     const loans = await issueRepository.getAll({ userId: user.id });
     const activeIssuesCount = loans.filter(l => l.status !== 'RETURNED').length;
-    const totalFines = loans
-      .filter(l => l.status === 'OVERDUE')
-      .reduce((sum, l) => sum + l.fineAmount, 0);
-
+        const fines = await fineRepository.getAll({ userId: user.id });
+    const totalFines = fines.reduce((sum, f) => sum + f.amount, 0);
     res.json({ user: { ...toPublicUser(user), activeIssuesCount, totalFines } });
   } catch (e) {
     res.status(500).json({ message: e.message || 'Failed to fetch user profile' });

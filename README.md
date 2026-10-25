@@ -103,6 +103,19 @@ JWT_SECRET=bookd_super_secret_jwt_key_demo_evaluation
 
 ---
 
+## Running in live mode (real Express backend)
+
+Windows / PowerShell notes: PowerShell blocks `npm.ps1`, so always call **`npm.cmd`**. In PowerShell `curl` is an alias for `Invoke-WebRequest`, so use `Invoke-RestMethod` for manual calls.
+
+1. Install everything once: `npm.cmd run install:all`
+2. Create the env files (they are gitignored; the `.env.example` files are committed):
+   - `server/.env` -> `PORT=5000`, `CLIENT_URL=http://localhost:5173`, `JWT_SECRET=<any string>`
+   - `client/.env` -> `VITE_USE_MOCK=false` and `VITE_API_URL=http://localhost:5000/api`
+3. Start both apps from the repo root: `npm.cmd run dev` (restart the client after changing `client/.env`).
+4. Demo accounts (password `demo1234`): `member@bookd.test` (Kanish), `librarian@bookd.test` (Naisha), `admin@bookd.test` (Dr. Patel). The login-page buttons also send `kanish@bookd.test` / `naisha@bookd.test` / `patel@bookd.test`; the server maps these aliases.
+5. Data lives in memory and resets whenever the server restarts. If the browser still holds a mock-mode token, log out (or clear `bookd_token` in localStorage) once.
+6. Automated check against a **freshly started** server: `npm.cmd --prefix server run test:e2e`
+
 ## 📖 Evaluation Handover Notes
 - See [API.md](API.md) for the exact REST API schema, request/response JSON shapes, and status codes.
 - See [HANDOVER.md](HANDOVER.md) for live vs. mock page classification, Naisha's server TODO list, and design decisions.

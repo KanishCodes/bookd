@@ -62,25 +62,23 @@ export const getReportsSummary = async () => {
     };
   }
 
-  // Combined endpoint or fallback in live mode
-  const [popular, fines] = await Promise.all([
+  // Live mode: everything comes from the server, nothing is taken from mock data
+  const [popular, fines, extra] = await Promise.all([
     getPopularBooksReport(),
-    getFinesReport()
+    getFinesReport(),
+    apiClient.get('/reports/summary').then((r) => r.data)
   ]);
 
   return {
     summary: {
-      totalBooks: 32,
-      totalCopies: 138,
-      activeLoans: 8,
-      overdueLoans: fines.overdueCount || 4,
-      totalMembers: 16,
-      totalFinesCollected: fines.totalCollected || 1420,
-      pendingFines: fines.totalPending || 265
+      ...extra.summary,
+      overdueLoans: fines.overdueCount,
+      totalFinesCollected: fines.totalCollected,
+      pendingFines: fines.totalPending
     },
     mostIssuedBooks: popular,
     monthlyCirculation: fines.monthlyBreakdown || [],
-    categoryDistribution: mockState.reports.categoryDistribution,
-    overdueMembers: mockState.reports.overdueMembers
+    categoryDistribution: extra.categoryDistribution,
+    overdueMembers: extra.overdueMembers
   };
 };

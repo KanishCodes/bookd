@@ -10,12 +10,8 @@ export const getFines = async (userId) => {
     return mockState.fines.filter((f) => f.userId === userId);
   }
 
-  try {
-    const res = await apiClient.get('/fines', { params: { userId } });
-    return res.data;
-  } catch (e) {
-    return mockState.fines.filter((f) => !userId || f.userId === userId);
-  }
+  const res = await apiClient.get('/fines', { params: { userId } });
+  return res.data;
 };
 
 export const payFine = async (fineId, paymentDetails = {}) => {
@@ -39,14 +35,6 @@ export const payFine = async (fineId, paymentDetails = {}) => {
     };
   }
 
-  try {
-    const res = await apiClient.post(`/fines/${fineId}/pay`, paymentDetails);
-    return res.data;
-  } catch (e) {
-    return {
-      success: true,
-      transactionId: `TXN-${Date.now()}`,
-      paidAt: new Date().toISOString()
-    };
-  }
+  const res = await apiClient.post(`/fines/${fineId}/pay`, paymentDetails);
+  return res.data;
 };

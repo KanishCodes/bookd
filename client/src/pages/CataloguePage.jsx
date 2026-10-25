@@ -126,7 +126,7 @@ export const CataloguePage = () => {
       setTimeout(() => setNotification(''), 4000);
       setIsDrawerOpen(false);
     } catch (err) {
-      alert('Failed to place reservation.');
+      alert(err.response?.data?.message || err.message || 'Failed to place reservation.');
     }
   };
 

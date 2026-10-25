@@ -277,10 +277,45 @@ This document details the exact contract between the **Book’d** frontend (`cli
 
 ---
 
-### Reservations & Fines (Mock Extensions)
+#### `GET /api/reports/summary` (extension, admin only)
+Not part of the original contract. Supplies the live numbers for the admin dashboard cards, category donut and delinquent-loans table so live mode never reads mock data.
+```json
+{
+  "summary": { "totalBooks": 32, "totalCopies": 138, "activeLoans": 10, "overdueLoans": 4,
+               "totalMembers": 16, "totalFinesCollected": 1420, "pendingFines": 265 },
+  "categoryDistribution": [ { "name": "Computer Science", "count": 7, "loans": 162 } ],
+  "overdueMembers": [ { "name": "Sneha Mukherjee", "memberId": "MEM-2024-190",
+                        "book": "A Pattern Language", "overdueDays": 21, "fine": 105 } ]
+}
+```
 
-#### `GET /api/reservations` | `DELETE /api/reservations/:id` | `POST /api/reservations`
-- Provides queue placement, queue position numbers, and hold cancellations.
+---
 
-#### `GET /api/fines?userId=` | `POST /api/fines/:id/pay`
-- Provides itemized fine line-items and checkout receipt generation.
+### Reservations (`/api/reservations`) - authenticated
+
+| Method | Path | Access | Notes |
+| :--- | :--- | :--- | :--- |
+| GET | `/api/reservations` | any role | Members get only their own holds; staff get all. |
+| POST | `/api/reservations` | any role | Body `{ bookId, userId }`. Members always reserve for themselves (`userId` is ignored); staff may reserve for a member. `201` + reservation. `404` unknown user/book, `400` duplicate hold or title already on loan to that member. |
+| DELETE | `/api/reservations/:id` | owner or staff | `200 { "success": true, "message": "Reservation cancelled" }`. `404` unknown, `403` "You can only cancel your own holds". |
+
+Reservation object:
+```json
+{ "id": "res-201", "bookId": "b-103", "bookTitle": "...", "bookAuthor": "...", "isbn": "978-0262046305",
+  "userId": "u-1", "userName": "Kanish", "memberId": "MEM-2024-001", "reservedAt": "2026-10-21T09:30:00.000Z",
+  "queuePosition": 1, "status": "WAITING | READY_FOR_PICKUP", "estimatedDate": "2026-11-04", "shelfLocation": "CS-C3-01" }
+```
+When a copy of a title is returned, the first `WAITING` hold becomes `READY_FOR_PICKUP`. Borrowing a title clears that member's hold.
+
+### Fines (`/api/fines`) - authenticated
+
+Fines are derived from loans (never stored); only payments are kept in memory.
+
+| Method | Path | Access | Notes |
+| :--- | :--- | :--- | :--- |
+| GET | `/api/fines?userId=` | any role | Members are always limited to their own fines; staff may filter with `userId`. |
+| POST | `/api/fines/:id/pay` | owner or staff | Body `{ "method": "CARD" \| "UPI" \| "BURSARY" }`. `404` "Fine not found or already settled", `403` "You can only pay your own fines". |
+
+Fine object: `{ "id": "fine-iss-1001", "userId": "u-1", "issueId": "iss-1001", "bookTitle": "...", "isbn": "...", "dueDate": "2026-10-24", "overdueDays": 1, "dailyRate": 5, "amount": 5, "status": "UNPAID" }`
+
+Pay response: `{ "success": true, "transactionId": "TXN-...", "paidAmount": 5, "paidAt": "2026-10-25T..." }`

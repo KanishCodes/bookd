@@ -33,7 +33,7 @@ export const ReservationsPage = () => {
         setReservations(data);
       }
     } catch (err) {
-      setError(err.message || 'Failed to load reservations.');
+      setError(err.response?.data?.message || err.message || 'Failed to load reservations.');
     } finally {
       setLoading(false);
     }
@@ -51,7 +51,7 @@ export const ReservationsPage = () => {
         setTimeout(() => setNotification(''), 4000);
         fetchRes();
       } catch (e) {
-        alert('Failed to cancel reservation.');
+        alert(e.response?.data?.message || e.message || 'Failed to cancel reservation.');
       }
     }
   };

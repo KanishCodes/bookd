@@ -6,13 +6,8 @@ export const getReservations = async () => {
     await mockDelay(null, 200);
     return [...mockState.reservations];
   }
-  // Fallback to mock data or real endpoint if Naisha adds it later
-  try {
-    const res = await apiClient.get('/reservations');
-    return res.data;
-  } catch (e) {
-    return mockState.reservations;
-  }
+  const res = await apiClient.get('/reservations');
+  return res.data;
 };
 
 export const cancelReservation = async (id) => {
@@ -24,12 +19,8 @@ export const cancelReservation = async (id) => {
     }
     return { success: true };
   }
-  try {
-    const res = await apiClient.delete(`/reservations/${id}`);
-    return res.data;
-  } catch (e) {
-    return { success: true };
-  }
+  const res = await apiClient.delete(`/reservations/${id}`);
+  return res.data;
 };
 
 export const createReservation = async ({ bookId, userId }) => {
@@ -55,10 +46,6 @@ export const createReservation = async ({ bookId, userId }) => {
     mockState.reservations.unshift(newRes);
     return newRes;
   }
-  try {
-    const res = await apiClient.post('/reservations', { bookId, userId });
-    return res.data;
-  } catch (e) {
-    return { success: true };
-  }
+  const res = await apiClient.post('/reservations', { bookId, userId });
+  return res.data;
 };

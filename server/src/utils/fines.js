@@ -34,3 +34,8 @@ export const getIssueStatus = (dueAtString, returnedAtString = null) => {
   const now = new Date();
   return now > dueDate ? 'OVERDUE' : 'ACTIVE';
 };
+export const getOverdueDays = (dueAtString, returnedAtString = null) => {
+  const due = new Date(dueAtString);
+  const end = returnedAtString ? new Date(returnedAtString) : new Date();
+  return end <= due ? 0 : Math.ceil((end.getTime() - due.getTime()) / (1000 * 60 * 60 * 24));
+};

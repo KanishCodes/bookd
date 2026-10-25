@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { login as apiLogin, register as apiRegister, getMe as apiGetMe } from '../api/auth.api.js';
 import { MOCK_USERS } from '../mock/users.js';
-
+import { isMockMode } from '../api/client.js';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -62,7 +62,17 @@ export const AuthProvider = ({ children }) => {
    * Fast Demo Role Switcher for the evaluation demo
    * Allows 1-click role toggling between Member, Librarian, Admin
    */
-  const switchDemoRole = (role) => {
+    const DEMO_EMAILS = {
+    member: 'member@bookd.test',
+    librarian: 'librarian@bookd.test',
+    admin: 'admin@bookd.test'
+  };
+
+  const switchDemoRole = async (role) => {
+    if (!isMockMode()) {
+      await login(DEMO_EMAILS[role] || DEMO_EMAILS.member, 'demo1234');
+      return;
+    }
     const targetUser = MOCK_USERS.find((u) => u.role === role) || MOCK_USERS[0];
     const demoToken = `mock-jwt-token-for-${targetUser.role}-${targetUser.id}`;
     setToken(demoToken);

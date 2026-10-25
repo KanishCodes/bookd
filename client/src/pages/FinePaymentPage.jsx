@@ -38,7 +38,7 @@ export const FinePaymentPage = () => {
       const data = await getFines(userId);
       setFines(data);
     } catch (err) {
-      setError(err.message || 'Failed to retrieve dues records.');
+      setError(err.response?.data?.message || err.message || 'Failed to retrieve dues records.');
     } finally {
       setLoading(false);
     }
@@ -68,7 +68,7 @@ export const FinePaymentPage = () => {
       fetchFinesList();
       refreshUser?.();
     } catch (err) {
-      alert('Payment processing error.');
+      alert(err.response?.data?.message || err.message || 'Payment processing error.');
     } finally {
       setProcessing(false);
     }

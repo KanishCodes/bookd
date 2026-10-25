@@ -6,7 +6,8 @@ import { INITIAL_BOOKS } from '../data/seedData.js';
  */
 class BookRepository {
   constructor() {
-    this.books = [...INITIAL_BOOKS];
+    this.books = INITIAL_BOOKS.map(b => ({ ...b }));
+    this.seq = 0;
   }
 
   async getAll({ search = '', category = '', available = '' } = {}) {
@@ -43,7 +44,7 @@ class BookRepository {
 
   async create(bookData) {
     const newBook = {
-      id: `b-${Date.now()}`,
+      id: `b-${Date.now()}-${++this.seq}`,
       title: bookData.title,
       author: bookData.author,
       isbn: bookData.isbn,

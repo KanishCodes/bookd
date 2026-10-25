@@ -27,7 +27,8 @@ import { bookRepository } from './bookRepository.js';
 
 class IssueRepository {
   constructor() {
-    this.issues = [...INITIAL_ISSUES];
+    this.issues = INITIAL_ISSUES.map(i => ({ ...i })); // clone so seed data is never mutated
+    this.seq = 0;
   }
 
   // Refresh status and fines on current records dynamically
@@ -74,7 +75,7 @@ class IssueRepository {
     const dueDate = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000); // 14 days loan
 
     const newIssue = {
-      id: `iss-${Date.now()}`,
+      id: `iss-${Date.now()}-${++this.seq}`,
       bookId,
       bookTitle,
       bookAuthor: bookAuthor || 'Author',
@@ -93,7 +94,7 @@ class IssueRepository {
     this.issues.unshift(newIssue);
     // Decrease available copies of book
     await bookRepository.adjustAvailableCopies(bookId, -1);
-    return newIssue;
+    return this._enrichIssue(newIssue);
   }
 
   async returnIssue(id) {
@@ -115,7 +116,7 @@ class IssueRepository {
 
     // Increase available copies of book
     await bookRepository.adjustAvailableCopies(issue.bookId, 1);
-    return issue;
+    return this._enrichIssue(issue);
   }
 
   async renewIssue(id) {
@@ -139,7 +140,7 @@ class IssueRepository {
     issue.status = getIssueStatus(issue.dueAt, null);
     issue.fineAmount = calculateFine(issue.dueAt, null);
 
-    return issue;
+    return this._enrichIssue(issue);
   }
 }
 

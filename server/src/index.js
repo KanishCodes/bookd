@@ -5,7 +5,8 @@ import bookRoutes from './routes/bookRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
-
+import fineRoutes from './routes/fineRoutes.js';
+import reservationRoutes from './routes/reservationRoutes.js';
 dotenv.config();
 
 const app = express();
@@ -24,7 +25,8 @@ app.use((req, res, next) => {
   console.log(`[${timestamp}] ${req.method} ${req.originalUrl}`);
   next();
 });
-
+app.use('/api/fines', fineRoutes);
+app.use('/api/reservations', reservationRoutes);
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.json({
