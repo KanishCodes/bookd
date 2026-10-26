@@ -1,7 +1,7 @@
 # Book’d — Role-Based Library Management System
 
 > **MERN Evaluation Project (Evaluation Target: 50–60% Completion)**  
-> Built by **Kanish** (UI / Frontend Lead) and **Naisha** (Backend / API Lead).
+> Built by **Kanish & Harshit** (UI / Frontend) and **Naisha & Harman** (Backend / API ).
 
 **Book’d** is a warm, editorial library and archival circulation management system featuring strict role-based access control (Patron/Member, Librarian, and Administrator). Designed with independent bookshop aesthetics, paper textures, and typographic elegance.
 
