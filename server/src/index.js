@@ -9,6 +9,7 @@ import reportRoutes from './routes/reportRoutes.js';
 import fineRoutes from './routes/fineRoutes.js';
 import reservationRoutes from './routes/reservationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import cronRoutes from './routes/cronRoutes.js';
 import { initReminderCron } from './jobs/reminderJob.js';
 dotenv.config();
 
@@ -53,6 +54,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/cron', cronRoutes);
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
