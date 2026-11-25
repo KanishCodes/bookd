@@ -1,4 +1,15 @@
 import { bookRepository } from '../repositories/bookRepository.js';
+import { lookupBookByIsbn } from '../services/isbnService.js';
+
+export const lookupBook = async (req, res) => {
+  try {
+    const { isbn } = req.params;
+    const metadata = await lookupBookByIsbn(isbn);
+    res.json(metadata);
+  } catch (error) {
+    res.status(400).json({ message: error.message || 'Failed to lookup book by ISBN' });
+  }
+};
 
 export const getBooks = async (req, res) => {
   try {

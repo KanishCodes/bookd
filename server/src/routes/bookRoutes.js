@@ -5,13 +5,15 @@ import {
   getBookById,
   createBook,
   updateBook,
-  deleteBook
+  deleteBook,
+  lookupBook
 } from '../controllers/bookController.js';
 
 const router = Router();
 
 // Public / Member accessible
 router.get('/', getBooks);
+router.get('/lookup/:isbn', lookupBook);
 router.get('/:id', getBookById);
 
 // Staff accessible (TODO for Naisha: attach authenticate + requireRole(['librarian', 'admin']) middleware)
