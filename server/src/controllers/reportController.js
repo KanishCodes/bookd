@@ -1,8 +1,10 @@
+import mongoose from 'mongoose';
 import { INITIAL_REPORTS } from '../data/seedData.js';
 import { issueRepository } from '../repositories/issueRepository.js';
 import { bookRepository } from '../repositories/bookRepository.js';
 import { fineRepository } from '../repositories/fineRepository.js';
 import { userRepository } from '../repositories/userRepository.js';
+import { IssueRecord } from '../models/IssueRecord.js';
 import { getOverdueDays } from '../utils/fines.js';
 /**
  * ============================================================================
@@ -28,15 +30,106 @@ export const getOverdueReport = async (req, res) => {
 
 export const getPopularBooks = async (req, res) => {
   try {
-    const [books, issues] = await Promise.all([bookRepository.getAll(), issueRepository.getAll()]);
+    if (mongoose.connection.readyState === 1) {
+      try {
+        // Native MongoDB aggregation pipeline grouping by bookId with counts
+        const aggregatedIssues = await IssueRecord.aggregate([
+          {
+            $group: {
+              _id: '$bookId',
+              liveIssues: { $sum: 1 },
+              bookTitle: { $first: '$bookTitle' },
+            },
+          },
+          {
+            $lookup: {
+              from: 'books',
+              let: { bId: '$_id' },
+              pipeline: [
+                {
+                  $match: {
+                    $expr: {
+                      $or: [
+                        { $eq: ['$customId', '$$bId'] },
+                        { $eq: [{ $toString: '$_id' }, '$$bId'] },
+                      ],
+                    },
+                  },
+                },
+              ],
+              as: 'bookInfo',
+            },
+          },
+          {
+            $unwind: {
+              path: '$bookInfo',
+              preserveNullAndEmptyArrays: true,
+            },
+          },
+          {
+            $project: {
+              bookId: '$_id',
+              title: { $ifNull: ['$bookInfo.title', '$bookTitle'] },
+              category: { $ifNull: ['$bookInfo.category', 'General'] },
+              liveIssues: 1,
+            },
+          },
+        ]);
+
+        const books = await bookRepository.getAll();
+        const history = INITIAL_REPORTS.mostIssuedBooks || [];
+        const issueMap = new Map();
+        for (const item of aggregatedIssues) {
+          issueMap.set(item.bookId, item.liveIssues);
+        }
+
+        const ranked = books
+          .map((b) => {
+            const t = b.title.toLowerCase();
+            const past = history.find(
+              (h) =>
+                t.includes(h.title.toLowerCase()) ||
+                h.title.toLowerCase().includes(t)
+            );
+            const live = issueMap.get(b.id) || issueMap.get(b.customId) || 0;
+            return {
+              title: b.title,
+              issues: (past?.issues || 0) + live,
+              category: b.category,
+            };
+          })
+          .sort((a, b) => b.issues - a.issues)
+          .slice(0, 8);
+
+        if (ranked.length > 0) {
+          return res.json(ranked);
+        }
+      } catch (aggErr) {
+        console.warn('[ReportController] Aggregation fallback to memory:', aggErr.message);
+      }
+    }
+
+    // In-memory fallback
+    const [books, issues] = await Promise.all([
+      bookRepository.getAll(),
+      issueRepository.getAll(),
+    ]);
     const history = INITIAL_REPORTS.mostIssuedBooks;
 
     const ranked = books
-      .map(b => {
+      .map((b) => {
         const t = b.title.toLowerCase();
-        const past = history.find(h => t.includes(h.title.toLowerCase()) || h.title.toLowerCase().includes(t));
-        const live = issues.filter(i => i.bookId === b.id).length;
-        return { title: b.title, issues: (past?.issues || 0) + live, category: b.category };
+        const past = history.find(
+          (h) =>
+            t.includes(h.title.toLowerCase()) ||
+            h.title.toLowerCase().includes(t)
+        );
+        const live = issues.filter((i) => i.bookId === b.id).length;
+        return {
+          title: b.title,
+          issues: (past?.issues || 0) + live,
+          category: b.category,
+        };
       })
       .sort((a, b) => b.issues - a.issues)
       .slice(0, 8);
