@@ -27,7 +27,7 @@ export const createReservation = async (req, res) => {
     const book = await bookRepository.getById(bookId);
     if (!book) return res.status(404).json({ message: 'Book not found' });
 
-    if (reservationRepository.exists(userId, bookId))
+    if (await reservationRepository.exists(userId, bookId))
       return res.status(400).json({ message: 'A hold for this title already exists' });
     if (await issueRepository.hasActiveLoan(userId, bookId))
       return res.status(400).json({ message: 'This member already has this book on loan' });
@@ -45,7 +45,7 @@ export const cancelReservation = async (req, res) => {
     if (!isStaff(req.user) && reservation.userId !== req.user.id)
       return res.status(403).json({ message: 'You can only cancel your own holds' });
 
-    reservationRepository.remove(req.params.id);
+    await reservationRepository.remove(req.params.id);
     res.json({ success: true, message: 'Reservation cancelled' });
   } catch (e) {
     res.status(500).json({ message: e.message || 'Failed to cancel hold' });
