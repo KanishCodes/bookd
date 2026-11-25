@@ -5,23 +5,50 @@ import { bookRepository } from '../repositories/bookRepository.js';
 import { fineRepository } from '../repositories/fineRepository.js';
 import { userRepository } from '../repositories/userRepository.js';
 import { IssueRecord } from '../models/IssueRecord.js';
-import { getOverdueDays } from '../utils/fines.js';
-/**
- * ============================================================================
- * TODO: NAISHA - Reports Controller (Admin analytics)
- * ============================================================================
- * Endpoints:
- * - GET /api/reports/overdue
- * - GET /api/reports/popular
- * - GET /api/reports/fines
- */
+import { getOverdueDays, calculateFine } from '../utils/fines.js';
 
 export const getOverdueReport = async (req, res) => {
   try {
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const now = new Date();
+        const records = await IssueRecord.aggregate([
+          {
+            $match: {
+              returnedAt: null,
+              $or: [{ status: 'OVERDUE' }, { dueAt: { $lt: now } }],
+            },
+          },
+          { $sort: { dueAt: 1 } },
+        ]);
+
+        if (records && records.length > 0) {
+          const enriched = records.map((r) => {
+            const dueAtStr = new Date(r.dueAt).toISOString();
+            return {
+              ...r,
+              id: r.customId || r._id.toString(),
+              status: 'OVERDUE',
+              dueAt: dueAtStr,
+              issuedAt: new Date(r.issuedAt).toISOString(),
+              fineAmount: calculateFine(r.dueAt, null),
+            };
+          });
+
+          return res.json({
+            count: enriched.length,
+            records: enriched,
+          });
+        }
+      } catch (err) {
+        console.warn('[ReportController] MongoDB overdue report fallback:', err.message);
+      }
+    }
+
     const overdueIssues = await issueRepository.getAll({ status: 'OVERDUE' });
     res.json({
       count: overdueIssues.length,
-      records: overdueIssues
+      records: overdueIssues,
     });
   } catch (error) {
     res.status(500).json({ message: error.message || 'Failed to fetch overdue report' });
@@ -142,16 +169,46 @@ export const getPopularBooks = async (req, res) => {
 
 export const getFinesReport = async (req, res) => {
   try {
-    const allIssues = await issueRepository.getAll();
-    const overdueIssues = allIssues.filter(iss => iss.status === 'OVERDUE');
-       const pendingFines = await fineRepository.getAll();
+    let overdueCount = 0;
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const now = new Date();
+        const [stats] = await IssueRecord.aggregate([
+          {
+            $facet: {
+              overdue: [
+                {
+                  $match: {
+                    returnedAt: null,
+                    $or: [{ status: 'OVERDUE' }, { dueAt: { $lt: now } }],
+                  },
+                },
+                { $count: 'total' },
+              ],
+            },
+          },
+        ]);
+        overdueCount = stats?.overdue?.[0]?.total || 0;
+      } catch (aggErr) {
+        console.warn('[ReportController] MongoDB fines aggregation fallback:', aggErr.message);
+      }
+    }
+
+    if (!overdueCount) {
+      const allIssues = await issueRepository.getAll();
+      const overdueIssues = allIssues.filter((iss) => iss.status === 'OVERDUE');
+      overdueCount = overdueIssues.length;
+    }
+
+    const pendingFines = await fineRepository.getAll();
     const totalPending = pendingFines.reduce((acc, f) => acc + f.amount, 0);
 
     res.json({
       totalCollected: INITIAL_REPORTS.summary.totalFinesCollected + fineRepository.totalCollected(),
       totalPending,
-      overdueCount: overdueIssues.length,
-      monthlyBreakdown: INITIAL_REPORTS.monthlyCirculation
+      overdueCount,
+      monthlyBreakdown: INITIAL_REPORTS.monthlyCirculation,
     });
   } catch (error) {
     res.status(500).json({ message: error.message || 'Failed to fetch fines report' });
