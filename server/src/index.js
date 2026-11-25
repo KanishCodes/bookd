@@ -9,10 +9,14 @@ import reportRoutes from './routes/reportRoutes.js';
 import fineRoutes from './routes/fineRoutes.js';
 import reservationRoutes from './routes/reservationRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import { initReminderCron } from './jobs/reminderJob.js';
 dotenv.config();
 
 // Connect to MongoDB
 connectDB();
+
+// Initialize automated background cron jobs
+initReminderCron();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
