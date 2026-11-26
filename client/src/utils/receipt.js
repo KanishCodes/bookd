@@ -149,3 +149,41 @@ export const generateFineReceipt = ({ receipt, user, method }) => {
 
   doc.save(`Receipt-${receipt.transactionId}.pdf`);
 };
+
+/**
+ * Book issue slip for a single loan.
+ */
+export const generateIssueSlip = ({ issue, user }) => {
+  const doc = new jsPDF();
+  drawHeader(doc, 'BOOK ISSUE SLIP');
+
+  const y = drawRows(
+    doc,
+    [
+      ['Slip Ref.', issue.id],
+      ['Member', user?.name],
+      ['Member ID', user?.memberId || issue.memberId],
+      ['Book Title', issue.bookTitle],
+      ['Author', issue.bookAuthor],
+      ['Issued On', fmtDate(issue.issuedAt)],
+      ['Due Date', fmtDate(issue.dueAt)],
+      ['Renewals Used', `${issue.renewCount || 0} of 2`],
+      ['Status', issue.status]
+    ],
+    48
+  );
+
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(90, 90, 90);
+  const note = doc.splitTextToSize(
+    'Please return this book on or before the due date. Overdue books are charged Rs. 5 per day. Each loan can be renewed up to 2 times.',
+    182
+  );
+  doc.text(note, 14, y + 6);
+
+  drawStamp(doc, y + 22, 'ISSUED');
+  drawFooter(doc, 'This is a computer-generated slip and does not require a signature.');
+
+  doc.save(`IssueSlip-${issue.id}.pdf`);
+};
