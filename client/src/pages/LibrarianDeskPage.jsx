@@ -33,6 +33,7 @@ export const LibrarianDeskPage = () => {
   const [booksList, setBooksList] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState('');
   const [usersList, setUsersList] = useState([]);
+  const [usersError, setUsersError] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
   const [issuing, setIssuing] = useState(false);
   const [issueError, setIssueError] = useState('');
@@ -52,7 +53,10 @@ export const LibrarianDeskPage = () => {
       const [issuesData, booksData, usersData] = await Promise.all([
         getAllIssues(),
         getBooks(),
-        getUsers({ role: 'member' })
+        getUsers({ role: 'member' }).catch((e) => {
+          setUsersError(e.response?.data?.message || 'Could not load patron list.');
+          return [];
+        })
       ]);
       setIssues(issuesData);
       setBooksList(booksData);
@@ -274,12 +278,20 @@ export const LibrarianDeskPage = () => {
                   onChange={(e) => setSelectedUserId(e.target.value)}
                   className="w-full px-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink focus:outline-none focus:border-venice-blue"
                 >
+                  {usersList.length === 0 && (
+                    <option value="">
+                      {usersError || 'No registered members found'}
+                    </option>
+                  )}
                   { usersList.map((usr) => (
                     <option key={usr.id} value={usr.id}>
                       {usr.name} — {usr.memberId} ({usr.department})
                     </option>
                   ))}
                 </select>
+                {usersError && (
+                  <p className="mt-1 text-[11px] text-warm-red font-semibold">{usersError}</p>
+                )}
               </div>
             </div>
 
