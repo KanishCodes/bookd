@@ -5,6 +5,7 @@ import { getMyIssues, renewBook } from '../api/issues.api.js';
 import { StatusBadge } from '../components/Badge.jsx';
 import { BookCover } from '../components/BookCover.jsx';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
+import { generateIssueSlip } from '../utils/receipt.js';
 import {
   BookOpen,
   Calendar,
@@ -14,8 +15,9 @@ import {
   ArrowRight,
   CheckCircle2,
   BookmarkCheck,
-  CreditCard,
-  UserCheck
+    CreditCard,
+  UserCheck,
+  Download
 } from 'lucide-react';
 
 export const MemberDashboardPage = () => {
@@ -296,8 +298,18 @@ export const MemberDashboardPage = () => {
 
                     {/* Card Footer / Action */}
                     <div className="mt-5 pt-3.5 border-t border-sand/70 flex items-center justify-between">
-                      <div className="text-xs text-ink-muted font-medium">
-                        Renewals: <span className="font-bold text-ink">{issue.renewCount || 0}/2</span>
+                                            <div className="text-xs text-ink-muted font-medium flex items-center gap-3">
+                        <span>
+                          Renewals: <span className="font-bold text-ink">{issue.renewCount || 0}/2</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => generateIssueSlip({ issue, user })}
+                          className="inline-flex items-center gap-1 text-venice-blue hover:underline font-bold"
+                        >
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Slip</span>
+                        </button>
                       </div>
 
                       <button
