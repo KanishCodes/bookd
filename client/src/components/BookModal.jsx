@@ -30,7 +30,8 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+    const [lookingUp, setLookingUp] = useState(false);
+  const [lookupMsg, setLookupMsg] = useState('');
   useEffect(() => {
     if (book) {
       setFormData({
@@ -62,9 +63,13 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
       });
     }
     setError('');
+        setLookupMsg('');
   }, [book, isOpen]);
-  const handleIsbnLookup = async () => {
+  
+   const handleIsbnLookup = async () => {
     setError('');
+    setLookupMsg('');
+    setLookingUp(true);
     try {
       const info = await lookupIsbn(formData.isbn);
       setFormData((prev) => ({
@@ -76,8 +81,11 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
         publicationYear: info.publicationYear || prev.publicationYear,
         pages: info.pages || prev.pages
       }));
+      setLookupMsg('Details filled from ISBN. Please review before saving.');
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'ISBN lookup failed.');
+    } finally {
+      setLookingUp(false);
     }
   };
   const handleChange = (e) => {
@@ -173,14 +181,26 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
                 placeholder="e.g. 9780132350884"
                 className="flex-1 min-w-0 px-3 py-2 bg-merino-light border border-sand rounded text-sm text-ink font-mono focus:outline-none focus:border-venice-blue"
               />
-              <button
+               <button
                 type="button"
                 onClick={handleIsbnLookup}
-                className="px-3 py-2 bg-venice-blue hover:bg-venice-blue-hover text-merino text-xs font-medium rounded transition whitespace-nowrap"
+                disabled={lookingUp || !formData.isbn.trim()}
+                className="px-3 py-2 bg-venice-blue hover:bg-venice-blue-hover text-merino text-xs font-medium rounded transition whitespace-nowrap disabled:opacity-50"
               >
-                Auto-fill
+                {lookingUp ? 'Searching...' : 'Auto-fill'}
               </button>
             </div>
+
+                        {lookupMsg && (
+              <p className="mt-1 text-[11px] text-venice-blue font-semibold">{lookupMsg}</p>
+            )}
+            {formData.coverUrl && (
+              <img
+                src={formData.coverUrl}
+                alt="Cover preview"
+                className="mt-2 h-20 rounded border border-sand object-cover"
+              />
+            )}
           </div>
 
           <div>
