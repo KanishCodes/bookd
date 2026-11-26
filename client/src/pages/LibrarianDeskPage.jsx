@@ -4,6 +4,8 @@ import { getAllIssues, issueBook, returnBook, renewBook } from '../api/issues.ap
 import { getBooks } from '../api/books.api.js';
 import { getUsers } from '../api/users.api.js';
 import { StatusBadge } from '../components/Badge.jsx';
+import { SortableTh } from '../components/SortableTh.jsx';
+import { useSortableData } from '../utils/useSortableData.js';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
 import {
   Library,
@@ -163,7 +165,7 @@ export const LibrarianDeskPage = () => {
     }
     return true;
   });
-
+  const { sortedItems: sortedIssues, sort, requestSort } = useSortableData(filteredIssues);
   const activeLoanCount = issues.filter((i) => !i.returnedAt).length;
   const overdueLoanCount = issues.filter((i) => i.status === 'OVERDUE').length;
   const returnedLoanCount = issues.filter((i) => !!i.returnedAt).length;
@@ -484,18 +486,18 @@ export const LibrarianDeskPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-sand/40 border-b border-sand font-bold uppercase tracking-wider text-ink-muted">
-                    <th className="py-3 px-4">Issue Ref</th>
-                    <th className="py-3 px-4">Title & Volume</th>
-                    <th className="py-3 px-4">Borrower (Card)</th>
-                    <th className="py-3 px-4">Issued</th>
-                    <th className="py-3 px-4">Due Date</th>
-                    <th className="py-3 px-4">Status / Fine</th>
-                    <th className="py-3 px-4 text-right">Desk Actions</th>
+                    <tr className="bg-sand/40 border-b border-sand text-ink-muted">
+                    <SortableTh label="Issue Ref" sortKey="id" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Title & Volume" sortKey="bookTitle" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Borrower (Card)" sortKey="userName" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Issued" sortKey="issuedAt" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Due Date" sortKey="dueAt" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Status / Fine" sortKey="fineAmount" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <th className="py-3 px-4 text-right font-bold uppercase tracking-wider">Desk Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sand/50">
-                  {filteredIssues.map((iss) => {
+                  {sortedIssues.map((iss) => {
                     const isOverdue = iss.status === 'OVERDUE';
                     const isReturned = !!iss.returnedAt;
 
