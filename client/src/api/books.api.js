@@ -128,3 +128,65 @@ export const deleteBook = async (id) => {
   const response = await apiClient.delete(`/books/${id}`);
   return response.data;
 };
+
+ /**
+ * ISBN Lookup
+ * Live: GET /api/books/lookup/:isbn
+ *   -> { title, author, category, coverUrl, publicationYear, pages, description }
+ * Mock: queries the public Open Library API directly so the demo works without the backend.
+ */
+const CATEGORY_KEYWORDS = [
+  ['Computer Science', ['computer', 'programming', 'software', 'algorithm', 'database', 'internet', 'artificial intelligence']],
+  ['Poetry', ['poetry', 'poems', 'poet']],
+  ['Fiction & Mystery', ['fiction', 'mystery', 'thriller', 'detective', 'fantasy', 'romance']],
+  ['Classic Literature', ['classic', 'literature', 'novel']],
+  ['History & Philosophy', ['history', 'philosophy', 'politic', 'biograph']],
+  ['Science & Nature', ['science', 'physics', 'chemistry', 'biology', 'nature', 'mathematic', 'astronomy']],
+  ['Art & Architecture', ['architecture', 'painting', 'photograph', 'design']]
+];
+
+const guessCategory = (subjects = []) => {
+  const text = subjects.join(' ').toLowerCase();
+  for (const [category, words] of CATEGORY_KEYWORDS) {
+    if (words.some((w) => text.includes(w))) return category;
+  }
+  return null;
+};
+
+export const lookupIsbn = async (rawIsbn) => {
+  const isbn = String(rawIsbn || '').replace(/[^0-9Xx]/g, '');
+  if (isbn.length !== 10 && isbn.length !== 13) {
+    const err = new Error('Enter a valid 10 or 13 digit ISBN.');
+    err.response = { status: 400, data: { message: err.message } };
+    throw err;
+  }
+
+  if (isMockMode()) {
+    const res = await fetch(
+      `https://openlibrary.org/api/books?bibkeys=ISBN:${isbn}&format=json&jscmd=data`
+    );
+    if (!res.ok) throw new Error('ISBN lookup service is unreachable. Try again.');
+
+    const json = await res.json();
+    const data = json[`ISBN:${isbn}`];
+    if (!data) {
+      const err = new Error('No book found for this ISBN. Please enter details manually.');
+      err.response = { status: 404, data: { message: err.message } };
+      throw err;
+    }
+
+    const year = (data.publish_date || '').match(/\d{4}/);
+    return {
+      title: data.subtitle ? `${data.title}: ${data.subtitle}` : data.title,
+      author: (data.authors || []).map((a) => a.name).join(', '),
+      category: guessCategory((data.subjects || []).map((s) => s.name)),
+      coverUrl: data.cover?.large || data.cover?.medium || '',
+      publicationYear: year ? Number(year[0]) : null,
+      pages: data.number_of_pages || 0,
+      description: ''
+    };
+  }
+
+  const response = await apiClient.get(`/books/lookup/${isbn}`);
+  return response.data;
+};
