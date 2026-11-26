@@ -2,6 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getMyIssues, renewBook } from '../api/issues.api.js';
+import { getBooks } from '../api/books.api.js';
+import { getRecommendations } from '../utils/recommendations.js';
+import { SortableTh } from '../components/SortableTh.jsx';
+import { useSortableData } from '../utils/useSortableData.js';
 import { StatusBadge } from '../components/Badge.jsx';
 import { BookCover } from '../components/BookCover.jsx';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
@@ -27,6 +31,7 @@ export const MemberDashboardPage = () => {
   const [error, setError] = useState('');
   const [actionLoading, setActionLoading] = useState(null);
   const [notification, setNotification] = useState('');
+    const [recommended, setRecommended] = useState([]);
 
   const fetchLoans = useCallback(async () => {
     setLoading(true);
@@ -34,6 +39,8 @@ export const MemberDashboardPage = () => {
     try {
       const data = await getMyIssues();
       setIssues(data);
+      const allBooks = await getBooks().catch(() => []);
+      setRecommended(getRecommendations({ issues: data, books: allBooks }));
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to fetch personal loan records.');
     } finally {
@@ -63,7 +70,8 @@ export const MemberDashboardPage = () => {
   // Split into active loans and returned history
   const activeIssues = issues.filter((iss) => !iss.returnedAt);
   const returnedIssues = issues.filter((iss) => !!iss.returnedAt);
-
+  const { sortedItems: sortedHistory, sort: historySort, requestSort: requestHistorySort } =
+    useSortableData(returnedIssues);
   // Compute stats strictly from API issue records and user profile
   const overdueCount = activeIssues.filter((iss) => iss.status === 'OVERDUE').length;
   const totalFineAmount = activeIssues.reduce((sum, iss) => sum + (iss.fineAmount || 0), 0);
@@ -336,7 +344,40 @@ export const MemberDashboardPage = () => {
           )}
         </div>
       </div>
+                {/* Recommended for You */}
+      {recommended.length > 0 && (
+        <div className="mt-12">
+          <div className="pb-3 border-b border-sand">
+            <h2 className="text-2xl font-extrabold text-ink tracking-tight">
+              Recommended for You
+            </h2>
+            <p className="text-xs text-ink-muted font-medium mt-0.5">
+              Available titles from the categories you borrow most.
+            </p>
+          </div>
 
+          <div className="mt-4 flex gap-4 overflow-x-auto pb-3">
+            {recommended.map((book) => (
+              <Link key={book.id} to="/catalogue" className="shrink-0 w-36 group">
+                <BookCover
+                  title={book.title}
+                  author={book.author}
+                  category={book.category}
+                  coverUrl={book.coverUrl}
+                  size="md"
+                />
+                <div className="mt-2 text-xs font-bold text-ink truncate group-hover:text-venice-blue transition">
+                  {book.title}
+                </div>
+                <div className="text-[11px] text-ink-muted truncate">{book.author}</div>
+                <div className="text-[10px] text-sage font-semibold mt-0.5">
+                  {book.availableCopies} available
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
       {/* Returned History Table */}
       <div className="mt-12">
         <div className="pb-3 border-b border-sand">
