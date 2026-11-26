@@ -368,9 +368,12 @@ export const LoginPage = () => {
             </form>
           )}
 
-          <div className="mt-5 pt-3.5 border-t border-sand text-center text-[11px] text-ink-muted">
-            Evaluation demonstration • Role-governed circulation ledger
-          </div>
+         <div className="mt-5 pt-3.5 border-t border-sand text-center text-[11px] text-ink-muted">
+  New to Book’d?{' '}
+  <Link to="/register" className="font-bold text-venice-blue hover:underline">
+    Create a member account
+  </Link>
+</div>
         </div>
       </div>
     </div>
