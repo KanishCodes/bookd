@@ -6,6 +6,7 @@ import { getUsers } from '../api/users.api.js';
 import { StatusBadge } from '../components/Badge.jsx';
 import { SortableTh } from '../components/SortableTh.jsx';
 import { useSortableData } from '../utils/useSortableData.js';
+import { downloadCsv, ISSUE_CSV_COLUMNS } from '../utils/csv.js';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
 import {
   Library,
@@ -18,7 +19,8 @@ import {
   RefreshCw,
   Clock,
   User,
-  Barcode
+   Barcode,
+  Download
 } from 'lucide-react';
 
 export const LibrarianDeskPage = () => {
@@ -166,6 +168,10 @@ export const LibrarianDeskPage = () => {
     return true;
   });
   const { sortedItems: sortedIssues, sort, requestSort } = useSortableData(filteredIssues);
+    const handleExportCsv = () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadCsv(`circulation-${activeFilter.toLowerCase()}-${stamp}.csv`, sortedIssues, ISSUE_CSV_COLUMNS);
+  };
   const activeLoanCount = issues.filter((i) => !i.returnedAt).length;
   const overdueLoanCount = issues.filter((i) => i.status === 'OVERDUE').length;
   const returnedLoanCount = issues.filter((i) => !!i.returnedAt).length;
@@ -408,6 +414,15 @@ export const LibrarianDeskPage = () => {
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
+                        <button
+              type="button"
+              onClick={handleExportCsv}
+              disabled={sortedIssues.length === 0}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-merino-light border border-sand hover:bg-sand text-ink rounded-full text-[11px] font-bold transition disabled:opacity-40"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export CSV</span>
+            </button>
             {/* Table Search */}
             <div className="relative">
               <Search className="w-3.5 h-3.5 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
