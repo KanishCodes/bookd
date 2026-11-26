@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getAllIssues, issueBook, returnBook, renewBook } from '../api/issues.api.js';
 import { getBooks } from '../api/books.api.js';
-import { MOCK_USERS } from '../mock/users.js';
+import { getUsers } from '../api/users.api.js';
 import { StatusBadge } from '../components/Badge.jsx';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
 import {
@@ -32,6 +32,7 @@ export const LibrarianDeskPage = () => {
   // Fast Issue Form State
   const [booksList, setBooksList] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState('');
+  const [usersList, setUsersList] = useState([]);
   const [selectedUserId, setSelectedUserId] = useState('');
   const [issuing, setIssuing] = useState(false);
   const [issueError, setIssueError] = useState('');
@@ -47,19 +48,21 @@ export const LibrarianDeskPage = () => {
   const fetchIssuesAndBooks = useCallback(async () => {
     setLoading(true);
     setError('');
-    try {
-      const [issuesData, booksData] = await Promise.all([
+        try {
+      const [issuesData, booksData, usersData] = await Promise.all([
         getAllIssues(),
-        getBooks()
+        getBooks(),
+        getUsers({ role: 'member' })
       ]);
       setIssues(issuesData);
       setBooksList(booksData);
+      setUsersList(usersData);
       if (booksData.length > 0 && !selectedBookId) {
         const firstAvail = booksData.find((b) => b.availableCopies > 0);
         if (firstAvail) setSelectedBookId(firstAvail.id);
       }
-      if (MOCK_USERS.length > 0 && !selectedUserId) {
-        setSelectedUserId(MOCK_USERS[0].id);
+      if (usersData.length > 0 && !selectedUserId) {
+        setSelectedUserId(usersData[0].id);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load circulation records.');
@@ -271,7 +274,7 @@ export const LibrarianDeskPage = () => {
                   onChange={(e) => setSelectedUserId(e.target.value)}
                   className="w-full px-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink focus:outline-none focus:border-venice-blue"
                 >
-                  {MOCK_USERS.map((usr) => (
+                  { usersList.map((usr) => (
                     <option key={usr.id} value={usr.id}>
                       {usr.name} — {usr.memberId} ({usr.department})
                     </option>
