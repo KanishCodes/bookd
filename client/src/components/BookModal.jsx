@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from './Modal.jsx';
-import { createBook, updateBook } from '../api/books.api.js';
-
+import { createBook, updateBook, lookupIsbn } from '../api/books.api.js';
 const CATEGORIES = [
   'Computer Science',
   'Classic Literature',
@@ -31,7 +30,8 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
-
+    const [lookingUp, setLookingUp] = useState(false);
+  const [lookupMsg, setLookupMsg] = useState('');
   useEffect(() => {
     if (book) {
       setFormData({
@@ -63,8 +63,31 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
       });
     }
     setError('');
+        setLookupMsg('');
   }, [book, isOpen]);
-
+  
+   const handleIsbnLookup = async () => {
+    setError('');
+    setLookupMsg('');
+    setLookingUp(true);
+    try {
+      const info = await lookupIsbn(formData.isbn);
+      setFormData((prev) => ({
+        ...prev,
+        title: info.title || prev.title,
+        author: info.author || prev.author,
+        category: CATEGORIES.includes(info.category) ? info.category : prev.category,
+        coverUrl: info.coverUrl || prev.coverUrl,
+        publicationYear: info.publicationYear || prev.publicationYear,
+        pages: info.pages || prev.pages
+      }));
+      setLookupMsg('Details filled from ISBN. Please review before saving.');
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'ISBN lookup failed.');
+    } finally {
+      setLookingUp(false);
+    }
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -144,19 +167,40 @@ export const BookModal = ({ isOpen, onClose, book, onSaved }) => {
             />
           </div>
 
-          <div>
+                    <div>
             <label className="block text-xs font-medium text-ink small-caps uppercase tracking-wider mb-1">
               ISBN *
             </label>
-            <input
-              type="text"
-              name="isbn"
-              required
-              value={formData.isbn}
-              onChange={handleChange}
-              placeholder="e.g. 978-1449373320"
-              className="w-full px-3 py-2 bg-merino-light border border-sand rounded text-sm text-ink font-mono focus:outline-none focus:border-venice-blue"
-            />
+            <div className="flex gap-2">
+              <input
+                type="text"
+                name="isbn"
+                required
+                value={formData.isbn}
+                onChange={handleChange}
+                placeholder="e.g. 9780132350884"
+                className="flex-1 min-w-0 px-3 py-2 bg-merino-light border border-sand rounded text-sm text-ink font-mono focus:outline-none focus:border-venice-blue"
+              />
+               <button
+                type="button"
+                onClick={handleIsbnLookup}
+                disabled={lookingUp || !formData.isbn.trim()}
+                className="px-3 py-2 bg-venice-blue hover:bg-venice-blue-hover text-merino text-xs font-medium rounded transition whitespace-nowrap disabled:opacity-50"
+              >
+                {lookingUp ? 'Searching...' : 'Auto-fill'}
+              </button>
+            </div>
+
+                        {lookupMsg && (
+              <p className="mt-1 text-[11px] text-venice-blue font-semibold">{lookupMsg}</p>
+            )}
+            {formData.coverUrl && (
+              <img
+                src={formData.coverUrl}
+                alt="Cover preview"
+                className="mt-2 h-20 rounded border border-sand object-cover"
+              />
+            )}
           </div>
 
           <div>

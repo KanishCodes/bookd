@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getFines, payFine } from '../api/fines.api.js';
 import { Modal } from '../components/Modal.jsx';
+import { generateFineReceipt } from '../utils/receipt.js';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
 import {
   CreditCard,
@@ -11,7 +12,8 @@ import {
   Receipt,
   CheckCircle2,
   Calendar,
-  Clock
+  Clock, 
+   Download
 } from 'lucide-react';
 
 export const FinePaymentPage = () => {
@@ -219,7 +221,14 @@ export const FinePaymentPage = () => {
                 <span className="text-ink truncate max-w-[200px]">{receipt.fine?.bookTitle}</span>
               </div>
             </div>
-
+            <button
+              type="button"
+              onClick={() => generateFineReceipt({ receipt, user, method: paymentMethod })}
+              className="w-full py-2 border border-venice-blue text-venice-blue text-xs uppercase small-caps tracking-wider font-semibold rounded hover:bg-venice-blue hover:text-merino transition flex items-center justify-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              <span>Download PDF Receipt</span>
+            </button>
             <button
               onClick={() => setIsModalOpen(false)}
               className="w-full py-2 bg-venice-blue text-merino text-xs uppercase small-caps tracking-wider font-semibold rounded hover:bg-venice-blue-hover transition"

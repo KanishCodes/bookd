@@ -5,6 +5,7 @@ import { ProtectedRoute } from './routes/ProtectedRoute.jsx';
 
 import LandingPage from './pages/LandingPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
+import RegisterPage from './pages/RegisterPage.jsx';
 import CataloguePage from './pages/CataloguePage.jsx';
 import MemberDashboardPage from './pages/MemberDashboardPage.jsx';
 import LibrarianDeskPage from './pages/LibrarianDeskPage.jsx';
@@ -16,8 +17,7 @@ import NotFoundPage from './pages/NotFoundPage.jsx';
 
 export function App() {
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
-
+const isLoginPage = ['/login', '/register'].includes(location.pathname);
   return (
     <div className="min-h-screen bg-merino flex flex-col font-sans text-ink">
       {!isLoginPage && <Navbar />}
@@ -26,6 +26,7 @@ export function App() {
         <Routes>
           {/* Main Landing Page */}
           <Route path="/" element={<LandingPage />} />
+          <Route path="/register" element={<RegisterPage />} />
 
           {/* Authentication */}
           <Route path="/login" element={<LoginPage />} />

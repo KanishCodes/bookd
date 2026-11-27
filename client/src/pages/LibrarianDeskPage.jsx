@@ -2,8 +2,11 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { getAllIssues, issueBook, returnBook, renewBook } from '../api/issues.api.js';
 import { getBooks } from '../api/books.api.js';
-import { MOCK_USERS } from '../mock/users.js';
+import { getUsers } from '../api/users.api.js';
 import { StatusBadge } from '../components/Badge.jsx';
+import { SortableTh } from '../components/SortableTh.jsx';
+import { useSortableData } from '../utils/useSortableData.js';
+import { downloadCsv, ISSUE_CSV_COLUMNS } from '../utils/csv.js';
 import { LoadingState, EmptyState, ErrorState } from '../components/FeedbackStates.jsx';
 import {
   Library,
@@ -16,7 +19,8 @@ import {
   RefreshCw,
   Clock,
   User,
-  Barcode
+   Barcode,
+  Download
 } from 'lucide-react';
 
 export const LibrarianDeskPage = () => {
@@ -32,6 +36,8 @@ export const LibrarianDeskPage = () => {
   // Fast Issue Form State
   const [booksList, setBooksList] = useState([]);
   const [selectedBookId, setSelectedBookId] = useState('');
+  const [usersList, setUsersList] = useState([]);
+  const [usersError, setUsersError] = useState('');
   const [selectedUserId, setSelectedUserId] = useState('');
   const [issuing, setIssuing] = useState(false);
   const [issueError, setIssueError] = useState('');
@@ -47,19 +53,24 @@ export const LibrarianDeskPage = () => {
   const fetchIssuesAndBooks = useCallback(async () => {
     setLoading(true);
     setError('');
-    try {
-      const [issuesData, booksData] = await Promise.all([
+        try {
+      const [issuesData, booksData, usersData] = await Promise.all([
         getAllIssues(),
-        getBooks()
+        getBooks(),
+        getUsers({ role: 'member' }).catch((e) => {
+          setUsersError(e.response?.data?.message || 'Could not load patron list.');
+          return [];
+        })
       ]);
       setIssues(issuesData);
       setBooksList(booksData);
+      setUsersList(usersData);
       if (booksData.length > 0 && !selectedBookId) {
         const firstAvail = booksData.find((b) => b.availableCopies > 0);
         if (firstAvail) setSelectedBookId(firstAvail.id);
       }
-      if (MOCK_USERS.length > 0 && !selectedUserId) {
-        setSelectedUserId(MOCK_USERS[0].id);
+      if (usersData.length > 0 && !selectedUserId) {
+        setSelectedUserId(usersData[0].id);
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Failed to load circulation records.');
@@ -156,7 +167,11 @@ export const LibrarianDeskPage = () => {
     }
     return true;
   });
-
+  const { sortedItems: sortedIssues, sort, requestSort } = useSortableData(filteredIssues);
+    const handleExportCsv = () => {
+    const stamp = new Date().toISOString().slice(0, 10);
+    downloadCsv(`circulation-${activeFilter.toLowerCase()}-${stamp}.csv`, sortedIssues, ISSUE_CSV_COLUMNS);
+  };
   const activeLoanCount = issues.filter((i) => !i.returnedAt).length;
   const overdueLoanCount = issues.filter((i) => i.status === 'OVERDUE').length;
   const returnedLoanCount = issues.filter((i) => !!i.returnedAt).length;
@@ -271,12 +286,20 @@ export const LibrarianDeskPage = () => {
                   onChange={(e) => setSelectedUserId(e.target.value)}
                   className="w-full px-3 py-2 bg-merino-light border border-sand rounded text-xs text-ink focus:outline-none focus:border-venice-blue"
                 >
-                  {MOCK_USERS.map((usr) => (
+                  {usersList.length === 0 && (
+                    <option value="">
+                      {usersError || 'No registered members found'}
+                    </option>
+                  )}
+                  { usersList.map((usr) => (
                     <option key={usr.id} value={usr.id}>
                       {usr.name} — {usr.memberId} ({usr.department})
                     </option>
                   ))}
                 </select>
+                {usersError && (
+                  <p className="mt-1 text-[11px] text-warm-red font-semibold">{usersError}</p>
+                )}
               </div>
             </div>
 
@@ -391,6 +414,15 @@ export const LibrarianDeskPage = () => {
           </div>
 
           <div className="flex items-center gap-2 self-start sm:self-auto">
+                        <button
+              type="button"
+              onClick={handleExportCsv}
+              disabled={sortedIssues.length === 0}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-merino-light border border-sand hover:bg-sand text-ink rounded-full text-[11px] font-bold transition disabled:opacity-40"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Export CSV</span>
+            </button>
             {/* Table Search */}
             <div className="relative">
               <Search className="w-3.5 h-3.5 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
@@ -469,18 +501,18 @@ export const LibrarianDeskPage = () => {
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
                 <thead>
-                  <tr className="bg-sand/40 border-b border-sand font-bold uppercase tracking-wider text-ink-muted">
-                    <th className="py-3 px-4">Issue Ref</th>
-                    <th className="py-3 px-4">Title & Volume</th>
-                    <th className="py-3 px-4">Borrower (Card)</th>
-                    <th className="py-3 px-4">Issued</th>
-                    <th className="py-3 px-4">Due Date</th>
-                    <th className="py-3 px-4">Status / Fine</th>
-                    <th className="py-3 px-4 text-right">Desk Actions</th>
+                    <tr className="bg-sand/40 border-b border-sand text-ink-muted">
+                    <SortableTh label="Issue Ref" sortKey="id" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Title & Volume" sortKey="bookTitle" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Borrower (Card)" sortKey="userName" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Issued" sortKey="issuedAt" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Due Date" sortKey="dueAt" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <SortableTh label="Status / Fine" sortKey="fineAmount" sort={sort} onSort={requestSort} className="py-3 px-4 text-left" />
+                    <th className="py-3 px-4 text-right font-bold uppercase tracking-wider">Desk Actions</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sand/50">
-                  {filteredIssues.map((iss) => {
+                  {sortedIssues.map((iss) => {
                     const isOverdue = iss.status === 'OVERDUE';
                     const isReturned = !!iss.returnedAt;
 
