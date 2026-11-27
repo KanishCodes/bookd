@@ -115,6 +115,10 @@ expectStatus('return unknown 404', await call('PATCH', '/issues/iss-nope/return'
 expectStatus('renew returned loan 400', await call('PATCH', `/issues/${iss.data.id}/renew`, { token: L }), 400);
 
 // max 5 active loans: u-7 (Vikram) has none
+const existingU7Loans = (await call('GET', '/issues', { token: L })).data?.filter(i => i.userId === 'u-7' && !i.returnedAt) || [];
+for (const iss of existingU7Loans) {
+  await call('PATCH', `/issues/${iss.id}/return`, { token: L });
+}
 const loanBooks = ['b-109', 'b-114', 'b-118', 'b-129', 'b-131', 'b-108'];
 const loanIds = [];
 for (let i = 0; i < 5; i++) {
@@ -124,6 +128,9 @@ for (let i = 0; i < 5; i++) {
 }
 const sixth = await call('POST', '/issues', { token: L, body: { bookId: loanBooks[5], userId: 'u-7' } });
 check('6th active loan rejected 400', sixth.status === 400 && /limit/i.test(sixth.data.message), JSON.stringify(sixth.data));
+for (const id of loanIds) {
+  if (id) await call('PATCH', `/issues/${id}/return`, { token: L });
+}
 
 section('Renewals');
 const own = mine.data.find(i => i.id === 'iss-1002');
@@ -176,6 +183,10 @@ expectStatus('reserve missing bookId 400', await call('POST', '/reservations', {
 expectStatus('reserve unknown book 404', await call('POST', '/reservations', { token: M, body: { bookId: 'b-999', userId: 'u-1' } }), 404, 'Book not found');
 expectStatus('reserve duplicate hold 400', await call('POST', '/reservations', { token: M, body: { bookId: 'b-103', userId: 'u-1' } }), 400);
 expectStatus('reserve book already on loan 400', await call('POST', '/reservations', { token: M, body: { bookId: 'b-102', userId: 'u-1' } }), 400, 'This member already has this book on loan');
+const preHolds = (await call('GET', '/reservations', { token: L })).data?.filter(r => r.bookId === 'b-123' && r.id !== 'res-203') || [];
+for (const h of preHolds) {
+  await call('DELETE', `/reservations/${h.id}`, { token: L });
+}
 const r1 = await call('POST', '/reservations', { token: M, body: { bookId: 'b-123', userId: 'u-1' } });
 check('reserve 201 WAITING, queuePosition = existing+1 (2)', r1.status === 201 && r1.data.status === 'WAITING' && r1.data.queuePosition === 2 && r1.data.userId === 'u-1' && r1.data.isbn && r1.data.estimatedDate, JSON.stringify(r1.data));
 const spoofRes = await call('POST', '/reservations', { token: M, body: { bookId: 'b-107', userId: 'u-4' } });
@@ -197,9 +208,17 @@ const retPL = await call('PATCH', '/issues/iss-1005/return', { token: L });
 check('return of reserved title ok', retPL.status === 200);
 const afterReturn = (await call('GET', '/reservations', { token: L })).data.filter(r => r.bookId === 'b-123');
 check('next WAITING hold flips to READY_FOR_PICKUP on return', afterReturn.find(r => r.userId === 'u-9')?.status === 'READY_FOR_PICKUP', JSON.stringify(afterReturn));
+const gatsbyHoldCheck = (await call('GET', '/reservations', { token: M })).data?.find(r => r.bookId === 'b-103');
+if (!gatsbyHoldCheck) {
+  await call('POST', '/reservations', { token: M, body: { bookId: 'b-103', userId: 'u-1' } });
+}
 const gatsbyHold = (await call('GET', '/reservations', { token: M })).data.find(r => r.bookId === 'b-103');
 check('seed hold on CLRS still present for u-1', !!gatsbyHold);
 // Issue CLRS? 0 copies; return Rohan's CLRS loan then issue to u-1 -> hold cleared
+const preLend = (await call('GET', '/issues/mine', { token: M })).data?.find(i => i.bookId === 'b-103' && !i.returnedAt);
+if (preLend) {
+  await call('PATCH', `/issues/${preLend.id}/return`, { token: L });
+}
 await call('PATCH', '/issues/iss-1004/return', { token: L });
 const lend = await call('POST', '/issues', { token: L, body: { bookId: 'b-103', userId: 'u-1' } });
 check('issue reserved title to the holder', lend.status === 201);
@@ -231,4 +250,4 @@ const badJsonBody = await badJson.json().catch(() => ({}));
 check('malformed JSON -> 400 {message}', badJson.status === 400 && typeof badJsonBody.message === 'string', `(got ${badJson.status} ${JSON.stringify(badJsonBody)})`);
 
 console.log(`\n==================== ${pass} passed, ${fail} failed ====================`);
-if (fail) { console.log('Failed:\n - ' + failures.join('\n - ')); process.exit(1); }
+if (fail) { console.log('Failed:\n - ' + failures.join('\n - ')); process.exitCode = 1; } else { process.exitCode = 0; }

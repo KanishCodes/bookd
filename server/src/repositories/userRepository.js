@@ -37,22 +37,32 @@ class UserRepository {
         const doc = await User.findOne({ email: target });
         if (doc) return doc;
       } catch (err) {
-        console.warn('[UserRepo] MongoDB findByEmail fallback to memory:', err.message);
+        console.warn('[UserRepo] MongoDB findByEmail warning:', err.message);
       }
     }
     return this.users.find((u) => u.email.toLowerCase() === target) || null;
   }
 
   async getAll() {
+    let result = [];
     if (mongoose.connection.readyState === 1) {
       try {
         const docs = await User.find({});
-        if (docs && docs.length > 0) return docs;
+        if (docs && docs.length > 0) {
+          result = docs.map((d) => toPublicUser(d));
+        }
       } catch (err) {
-        console.warn('[UserRepo] MongoDB getAll fallback to memory:', err.message);
+        console.warn('[UserRepo] MongoDB getAll warning:', err.message);
       }
     }
-    return [...this.users];
+
+    const existingIds = new Set(result.map((u) => u.id || u.customId));
+    for (const u of this.users) {
+      if (!existingIds.has(u.id)) {
+        result.push(toPublicUser(u));
+      }
+    }
+    return result;
   }
 
   async findById(id) {
@@ -67,7 +77,7 @@ class UserRepository {
         const doc = await User.findOne(query);
         if (doc) return doc;
       } catch (err) {
-        console.warn('[UserRepo] MongoDB findById fallback to memory:', err.message);
+        console.warn('[UserRepo] MongoDB findById warning:', err.message);
       }
     }
     return this.users.find((u) => u.id === id || u.customId === id) || null;
@@ -78,25 +88,7 @@ class UserRepository {
     const memberId = `MEM-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
     const customId = `u-${Date.now()}`;
 
-    if (mongoose.connection.readyState === 1) {
-      try {
-        const doc = await User.create({
-          customId,
-          name: name.trim(),
-          email: cleanEmail,
-          passwordHash,
-          role: 'member', // anti-escalation: always member
-          memberId,
-          department: (department || 'General Studies').trim(),
-          isActive: true,
-        });
-        return doc;
-      } catch (err) {
-        console.warn('[UserRepo] MongoDB create fallback to memory:', err.message);
-      }
-    }
-
-    const user = {
+    const userMem = {
       id: customId,
       customId,
       name: name.trim(),
@@ -107,8 +99,27 @@ class UserRepository {
       passwordHash,
       isActive: true,
     };
-    this.users.push(user);
-    return user;
+    this.users.push(userMem);
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const doc = await User.create({
+          customId,
+          name: name.trim(),
+          email: cleanEmail,
+          passwordHash,
+          role: 'member', // anti-escalation
+          memberId,
+          department: (department || 'General Studies').trim(),
+          isActive: true,
+        });
+        return doc;
+      } catch (err) {
+        console.warn('[UserRepo] MongoDB create warning:', err.message);
+      }
+    }
+
+    return userMem;
   }
 }
 

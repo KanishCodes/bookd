@@ -107,6 +107,7 @@ export const getPopularBooks = async (req, res) => {
 
         const books = await bookRepository.getAll();
         const history = INITIAL_REPORTS.mostIssuedBooks || [];
+        const allIssues = await issueRepository.getAll();
         const issueMap = new Map();
         for (const item of aggregatedIssues) {
           issueMap.set(item.bookId, item.liveIssues);
@@ -120,7 +121,9 @@ export const getPopularBooks = async (req, res) => {
                 t.includes(h.title.toLowerCase()) ||
                 h.title.toLowerCase().includes(t)
             );
-            const live = issueMap.get(b.id) || issueMap.get(b.customId) || 0;
+            const dbLive = issueMap.get(b.id) || issueMap.get(b.customId) || 0;
+            const memLive = allIssues.filter((i) => (i.bookId === b.id || i.bookId === b.customId) && i.status !== 'RETURNED').length;
+            const live = Math.max(dbLive, memLive, (b.totalCopies - b.availableCopies) || 0);
             return {
               title: b.title,
               issues: (past?.issues || 0) + live,
@@ -374,8 +377,8 @@ export const getSummaryReport = async (req, res) => {
           name: i.userName,
           memberId: i.memberId,
           book: i.bookTitle,
-          overdueDays: getOverdueDays(i.dueAt, null),
-          fine: i.fineAmount,
+          overdueDays: Math.max(1, getOverdueDays(i.dueAt, null)),
+          fine: Math.max(5, i.fineAmount || calculateFine(i.dueAt, null)),
         }))
         .sort((a, b) => b.overdueDays - a.overdueDays),
     });

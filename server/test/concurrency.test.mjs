@@ -148,7 +148,8 @@ const runConcurrencySuite = async () => {
   }
   console.log('===============================================================\n');
 
-  process.exit(fail === 0 ? 0 : 1);
+  process.exitCode = fail === 0 ? 0 : 1;
+  return;
 };
 
 runConcurrencySuite().catch((err) => {

@@ -17,10 +17,11 @@ class BookRepository {
   }
 
   async getAll({ search = '', category = '', available = '' } = {}) {
+    let result = [];
+
     if (mongoose.connection.readyState === 1) {
       try {
         const query = {};
-
         if (search && search.trim() !== '') {
           const q = search.trim();
           query.$or = [
@@ -29,11 +30,9 @@ class BookRepository {
             { isbn: { $regex: q, $options: 'i' } },
           ];
         }
-
         if (category && category.trim() !== '' && category.toLowerCase() !== 'all') {
           query.category = { $regex: new RegExp(`^${category.trim()}$`, 'i') };
         }
-
         if (available === 'true' || available === true) {
           query.availableCopies = { $gt: 0 };
         } else if (available === 'false' || available === false) {
@@ -42,19 +41,20 @@ class BookRepository {
 
         const docs = await Book.find(query).sort({ createdAt: -1 });
         if (docs && docs.length > 0) {
-          return docs.map((d) => toPublicBook(d));
+          result = docs.map((d) => toPublicBook(d));
         }
       } catch (err) {
-        console.warn('[BookRepo] MongoDB getAll fallback to memory:', err.message);
+        console.warn('[BookRepo] MongoDB getAll warning:', err.message);
       }
     }
 
-    // In-memory fallback
-    let result = [...this.books];
+    // Always merge in-memory initial books so standard catalogue is complete without purging user data
+    const existingIds = new Set(result.map((b) => b.id || b.customId));
+    let memBooks = [...this.books];
 
     if (search && search.trim() !== '') {
       const q = search.toLowerCase().trim();
-      result = result.filter(
+      memBooks = memBooks.filter(
         (b) =>
           b.title.toLowerCase().includes(q) ||
           b.author.toLowerCase().includes(q) ||
@@ -63,18 +63,24 @@ class BookRepository {
     }
 
     if (category && category.trim() !== '' && category.toLowerCase() !== 'all') {
-      result = result.filter(
+      memBooks = memBooks.filter(
         (b) => b.category.toLowerCase() === category.toLowerCase()
       );
     }
 
     if (available === 'true' || available === true) {
-      result = result.filter((b) => b.availableCopies > 0);
+      memBooks = memBooks.filter((b) => b.availableCopies > 0);
     } else if (available === 'false' || available === false) {
-      result = result.filter((b) => b.availableCopies === 0);
+      memBooks = memBooks.filter((b) => b.availableCopies === 0);
     }
 
-    return result.map((b) => toPublicBook(b));
+    for (const b of memBooks) {
+      if (!existingIds.has(b.id)) {
+        result.push(toPublicBook(b));
+      }
+    }
+
+    return result;
   }
 
   async getById(id) {
@@ -113,6 +119,9 @@ class BookRepository {
       description: bookData.description || '',
     };
 
+    const newBook = { id: customId, ...payload };
+    this.books.unshift(newBook);
+
     if (mongoose.connection.readyState === 1) {
       try {
         const doc = await Book.create(payload);
@@ -122,12 +131,24 @@ class BookRepository {
       }
     }
 
-    const newBook = { id: customId, ...payload };
-    this.books.unshift(newBook);
     return toPublicBook(newBook);
   }
 
   async update(id, bookData) {
+    const index = this.books.findIndex((b) => b.id === id || b.customId === id);
+    let updatedMem = null;
+    if (index !== -1) {
+      const existing = this.books[index];
+      updatedMem = {
+        ...existing,
+        ...bookData,
+        id: existing.id,
+        totalCopies: bookData.totalCopies !== undefined ? Number(bookData.totalCopies) : existing.totalCopies,
+        availableCopies: bookData.availableCopies !== undefined ? Number(bookData.availableCopies) : existing.availableCopies,
+      };
+      this.books[index] = updatedMem;
+    }
+
     if (mongoose.connection.readyState === 1) {
       try {
         const query = {
@@ -141,30 +162,23 @@ class BookRepository {
         delete updatePayload._id;
         delete updatePayload.customId;
 
-        const doc = await Book.findOneAndUpdate(query, updatePayload, { new: true });
+        const doc = await Book.findOneAndUpdate(query, updatePayload, { returnDocument: 'after' });
         if (doc) return toPublicBook(doc);
       } catch (err) {
-        console.warn('[BookRepo] MongoDB update fallback to memory:', err.message);
+        console.warn('[BookRepo] MongoDB update warning:', err.message);
       }
     }
 
-    const index = this.books.findIndex((b) => b.id === id || b.customId === id);
-    if (index === -1) return null;
-
-    const existing = this.books[index];
-    const updated = {
-      ...existing,
-      ...bookData,
-      id: existing.id,
-      totalCopies: bookData.totalCopies !== undefined ? Number(bookData.totalCopies) : existing.totalCopies,
-      availableCopies: bookData.availableCopies !== undefined ? Number(bookData.availableCopies) : existing.availableCopies,
-    };
-
-    this.books[index] = updated;
-    return toPublicBook(updated);
+    return updatedMem ? toPublicBook(updatedMem) : null;
   }
 
   async delete(id) {
+    const index = this.books.findIndex((b) => b.id === id || b.customId === id);
+    if (index !== -1) {
+      this.books.splice(index, 1);
+    }
+
+    let deletedFromDb = false;
     if (mongoose.connection.readyState === 1) {
       try {
         const query = {
@@ -174,19 +188,26 @@ class BookRepository {
           ],
         };
         const res = await Book.findOneAndDelete(query);
-        if (res) return true;
+        if (res) deletedFromDb = true;
       } catch (err) {
-        console.warn('[BookRepo] MongoDB delete fallback to memory:', err.message);
+        console.warn('[BookRepo] MongoDB delete warning:', err.message);
       }
     }
 
-    const index = this.books.findIndex((b) => b.id === id || b.customId === id);
-    if (index === -1) return false;
-    this.books.splice(index, 1);
-    return true;
+    return index !== -1 || deletedFromDb;
   }
 
   async adjustAvailableCopies(id, delta) {
+    const book = this.books.find((b) => b.id === id || b.customId === id);
+    if (book) {
+      if (delta < 0 && book.availableCopies <= 0) {
+        const err = new Error('No available copies remaining for this title');
+        err.status = 400;
+        throw err;
+      }
+      book.availableCopies = Math.max(0, Math.min(book.totalCopies, book.availableCopies + delta));
+    }
+
     if (mongoose.connection.readyState === 1) {
       try {
         const query = {
@@ -194,22 +215,30 @@ class BookRepository {
             { customId: id },
             ...(mongoose.isValidObjectId(id) ? [{ _id: id }] : []),
           ],
+          ...(delta < 0 ? { availableCopies: { $gt: 0 } } : {}),
         };
         const doc = await Book.findOneAndUpdate(
           query,
           { $inc: { availableCopies: delta } },
-          { new: true }
+          { returnDocument: 'after' }
         );
-        if (doc) return toPublicBook(doc);
+        if (delta < 0 && !doc) {
+          if (book) book.availableCopies = Math.max(0, book.availableCopies - delta);
+          const err = new Error('No available copies remaining for this title');
+          err.status = 400;
+          throw err;
+        }
+        if (doc) {
+          if (book) book.availableCopies = doc.availableCopies;
+          return toPublicBook(doc);
+        }
       } catch (err) {
-        console.warn('[BookRepo] MongoDB adjustAvailableCopies fallback to memory:', err.message);
+        if (err.status) throw err;
+        console.warn('[BookRepo] MongoDB adjustAvailableCopies warning:', err.message);
       }
     }
 
-    const book = await this.getById(id);
-    if (!book) return null;
-    const newAvailable = Math.max(0, Math.min(book.totalCopies, book.availableCopies + delta));
-    return this.update(id, { availableCopies: newAvailable });
+    return book ? toPublicBook(book) : null;
   }
 }
 
