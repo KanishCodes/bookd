@@ -1,41 +1,111 @@
+import mongoose from 'mongoose';
 import bcrypt from 'bcryptjs';
 import { INITIAL_USERS } from '../data/seedData.js';
+import { User } from '../models/User.js';
 
 const DEMO_HASH = bcrypt.hashSync('demo1234', 10);
 
-export const toPublicUser = ({ passwordHash, ...rest }) => rest;
+export const toPublicUser = (user) => {
+  if (!user) return null;
+  const obj = typeof user.toObject === 'function' ? user.toObject({ virtuals: true }) : { ...user };
+  delete obj.passwordHash;
+  delete obj.__v;
+  obj.id = obj.customId || obj.id || obj._id?.toString();
+  return obj;
+};
+
 const EMAIL_ALIASES = {
-  'kanish': 'member@bookd.test',
+  kanish: 'member@bookd.test',
   'kanish@bookd.test': 'member@bookd.test',
-  'naisha': 'librarian@bookd.test',
+  naisha: 'librarian@bookd.test',
   'naisha@bookd.test': 'librarian@bookd.test',
-  'patel': 'admin@bookd.test',
+  patel: 'admin@bookd.test',
   'patel@bookd.test': 'admin@bookd.test',
 };
+
 class UserRepository {
   constructor() {
-    this.users = INITIAL_USERS.map(u => ({ ...u, passwordHash: DEMO_HASH }));
+    this.users = INITIAL_USERS.map((u) => ({ ...u, passwordHash: DEMO_HASH }));
   }
-    async findByEmail(email) {
+
+  async findByEmail(email) {
     const clean = email.trim().toLowerCase();
     const target = EMAIL_ALIASES[clean] || clean;
-    return this.users.find(u => u.email.toLowerCase() === target) || null;
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const doc = await User.findOne({ email: target });
+        if (doc) return doc;
+      } catch (err) {
+        console.warn('[UserRepo] MongoDB findByEmail fallback to memory:', err.message);
+      }
+    }
+    return this.users.find((u) => u.email.toLowerCase() === target) || null;
   }
+
   async getAll() {
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const docs = await User.find({});
+        if (docs && docs.length > 0) return docs;
+      } catch (err) {
+        console.warn('[UserRepo] MongoDB getAll fallback to memory:', err.message);
+      }
+    }
     return [...this.users];
   }
+
   async findById(id) {
-    return this.users.find(u => u.id === id) || null;
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const query = {
+          $or: [
+            { customId: id },
+            ...(mongoose.isValidObjectId(id) ? [{ _id: id }] : []),
+          ],
+        };
+        const doc = await User.findOne(query);
+        if (doc) return doc;
+      } catch (err) {
+        console.warn('[UserRepo] MongoDB findById fallback to memory:', err.message);
+      }
+    }
+    return this.users.find((u) => u.id === id || u.customId === id) || null;
   }
+
   async create({ name, email, passwordHash, department }) {
+    const cleanEmail = email.trim().toLowerCase();
+    const memberId = `MEM-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+    const customId = `u-${Date.now()}`;
+
+    if (mongoose.connection.readyState === 1) {
+      try {
+        const doc = await User.create({
+          customId,
+          name: name.trim(),
+          email: cleanEmail,
+          passwordHash,
+          role: 'member', // anti-escalation: always member
+          memberId,
+          department: (department || 'General Studies').trim(),
+          isActive: true,
+        });
+        return doc;
+      } catch (err) {
+        console.warn('[UserRepo] MongoDB create fallback to memory:', err.message);
+      }
+    }
+
     const user = {
-      id: `u-${Date.now()}`,
+      id: customId,
+      customId,
       name: name.trim(),
-      email: email.trim().toLowerCase(),
-      role: 'member', // never trust a role from the request body
-      memberId: `MEM-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`,
+      email: cleanEmail,
+      role: 'member', // anti-escalation
+      memberId,
       department: (department || 'General Studies').trim(),
       passwordHash,
+      isActive: true,
     };
     this.users.push(user);
     return user;

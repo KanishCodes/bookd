@@ -1,13 +1,23 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { connectDB } from './config/db.js';
 import bookRoutes from './routes/bookRoutes.js';
 import authRoutes from './routes/authRoutes.js';
 import issueRoutes from './routes/issueRoutes.js';
 import reportRoutes from './routes/reportRoutes.js';
 import fineRoutes from './routes/fineRoutes.js';
 import reservationRoutes from './routes/reservationRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import cronRoutes from './routes/cronRoutes.js';
+import { initReminderCron } from './jobs/reminderJob.js';
 dotenv.config();
+
+// Connect to MongoDB
+connectDB();
+
+// Initialize automated background cron jobs
+initReminderCron();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -40,9 +50,11 @@ app.get('/api/health', (req, res) => {
 
 // Primary API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 app.use('/api/books', bookRoutes);
 app.use('/api/issues', issueRoutes);
 app.use('/api/reports', reportRoutes);
+app.use('/api/cron', cronRoutes);
 
 // 404 Handler for undefined routes
 app.use((req, res) => {
